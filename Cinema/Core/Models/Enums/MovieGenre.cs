@@ -1,0 +1,30 @@
+﻿namespace Core.Models.Enums
+{
+    public enum MovieGenre
+    {
+        Absurdist,
+        Action,
+        Adult,
+        Adventure,
+        Animation,
+        Comedy,
+        Crime,
+        Drama,
+        Fantasy,
+        Historical,
+        HistoricalFiction,
+        Horror,
+        Mystery,
+        Phisolophical,
+        Political,
+        Romance,
+        Saga,
+        Satire,
+        ScienceFiction,
+        Social,
+        Speculative,
+        Thriller,
+        Urban,
+        Western
+    }
+}
