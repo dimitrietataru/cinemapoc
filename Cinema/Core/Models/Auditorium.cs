@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Core.Models
 {
-    public class Auditorium : StableEntity<Guid>
+    public class Auditorium : BaseEntity<Guid>
     {
         public Guid CinemaId { get; set; }
 

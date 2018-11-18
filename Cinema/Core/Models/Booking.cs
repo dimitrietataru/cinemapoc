@@ -4,7 +4,7 @@ using System;
 
 namespace Core.Models
 {
-    public class Booking : StableEntity<Guid>
+    public class Booking : BaseEntity<Guid>
     {
         public Guid? UserId { get; set; }
         public Guid EventId { get; set; }

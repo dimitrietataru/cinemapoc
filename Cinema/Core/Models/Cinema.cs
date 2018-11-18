@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Core.Models
 {
-    public class Cinema : StableEntity<Guid>
+    public class Cinema : BaseEntity<Guid>
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -14,6 +14,6 @@ namespace Core.Models
         public string Schedule { get; set; }
 
         public virtual List<Auditorium> Auditoriums { get; set; } = new List<Auditorium>();
-        public virtual List<Movie> Movies { get; set; } = new List<Movie>();
+        public virtual List<CinemaMovie> CinemaMovies { get; set; } = new List<CinemaMovie>();
     }
 }
