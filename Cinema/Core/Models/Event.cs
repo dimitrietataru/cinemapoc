@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Core.Models
 {
-    public class Event : StableEntity<Guid>
+    public class Event : BaseEntity<Guid>
     {
         public Guid MovieId { get; set; }
         public Guid AuditoriumId { get; set; }

@@ -2,10 +2,10 @@
 
 namespace Core.Models.Base
 {
-    public class StableEntity<T> : IEntity<T>, IStableEntity, IDeletable
+    public class BaseEntity<T> : IEntity<T>, IStableEntity, IDeletable
         where T : struct
     {
-        public StableEntity() => CreatedAt = DateTime.UtcNow;
+        public BaseEntity() => CreatedAt = DateTime.UtcNow;
 
         public T Id { get; set; }
         public DateTime CreatedAt { get; protected set; }

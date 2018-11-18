@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Core.Models
 {
-    public class Movie : StableEntity<Guid>
+    public class Movie : BaseEntity<Guid>
     {
         public string Name { get; set; }
         public string Description { get; set; }
