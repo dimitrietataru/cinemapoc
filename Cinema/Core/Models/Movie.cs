@@ -21,7 +21,7 @@ namespace Core.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public virtual List<Cinema> Cinemas { get; set; } = new List<Cinema>();
         public virtual List<Event> Events { get; set; } = new List<Event>();
+        public virtual List<CinemaMovie> CinemaMovies { get; set; } = new List<CinemaMovie>();
     }
 }
