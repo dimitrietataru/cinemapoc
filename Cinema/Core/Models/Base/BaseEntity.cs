@@ -9,7 +9,7 @@ namespace Core.Models.Base
 
         public T Id { get; set; }
         public DateTime CreatedAt { get; protected set; }
-        public Guid CreatedBy { get; set; }
+        public Guid CreatedBy { get; set; } = Guid.Empty;
         public DateTime? UpdatedAt { get; set; }
         public Guid? UpdatedBy { get; set; }
         public bool IsDeleted { get; set; }
