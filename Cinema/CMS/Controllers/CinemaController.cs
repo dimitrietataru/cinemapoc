@@ -2,7 +2,6 @@
 using CMS.Models.Cinema;
 using Core.Interfaces;
 using Core.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
