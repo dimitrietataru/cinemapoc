@@ -295,7 +295,6 @@ namespace Testing.CinemaTest
         internal async void GivenEditViewCalledWhenExceptionThrownThenHandleGracefully()
         {
             // Arange
-            var dbModel = modelFaker.GetTestCinema();
             mockCinemaService
                 .Setup(_ => _.GetByIdAsync(default))
                 .Throws<Exception>();
@@ -305,7 +304,7 @@ namespace Testing.CinemaTest
 
             // Assert
             mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
-            mockMapper.Verify(_ => _.Map<CinemaEditViewModel>(dbModel), Times.Never());
+            mockMapper.Verify(_ => _.Map<CinemaEditViewModel>(It.IsAny<Cinema>()), Times.Never());
             var result = Assert.IsType<RedirectToActionResult>(response);
             Assert.True(result != null);
             Assert.True(result is IActionResult);
@@ -377,6 +376,105 @@ namespace Testing.CinemaTest
             // Assert
             mockMapper.Verify(_ => _.Map<Cinema>(viewModel), Times.Once());
             mockCinemaService.Verify(_ => _.UpdateAsync(dbModel), Times.Once());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Home", result.ControllerName);
+        }
+
+        [Trait("Category", "Delete")]
+        [Fact(DisplayName = "CinemaController/Delete/Get -> view")]
+        internal async void GivenDeleteViewCalledWhenCinemaExistsThenReturnsDeleteView()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaDelete();
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync(dbModel);
+            mockMapper
+                .Setup(_ => _.Map<CinemaDeleteViewModel>(dbModel))
+                .Returns(viewModel);
+
+            // Act
+            var response = await controllerUnderTest.Delete((Guid)default);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<CinemaDeleteViewModel>(dbModel), Times.Once());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is CinemaDeleteViewModel);
+        }
+
+        [Trait("Category", "Delete")]
+        [Fact(DisplayName = "CinemaController/Delete/Get -> exception")]
+        internal async void GivenDeleteViewCalledWhenExceptionThrownThenHandleGracefully()
+        {
+            // Arange
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .Throws<Exception>();
+
+            // Act
+            var response = await controllerUnderTest.Delete((Guid)default);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<CinemaEditViewModel>(It.IsAny<Cinema>()), Times.Never());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Home", result.ControllerName);
+        }
+
+        [Trait("Category", "Delete")]
+        [Fact(DisplayName = "CinemaController/Delete -> success")]
+        internal async void GivenDeleteCalledWhenCinemaExistsThenDeletesCinema()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaDelete();
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync(dbModel);
+
+            // Act
+            var response = await controllerUnderTest.Delete(viewModel);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockCinemaService.Verify(_ => _.DeleteAsync(dbModel), Times.Once());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+        }
+
+        [Trait("Category", "Delete")]
+        [Fact(DisplayName = "CinemaController/Delete -> exception")]
+        internal async void GivenDeleteCalledWhenExceptionThrownThenHandleGracefully()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaDelete();
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync(dbModel);
+            mockCinemaService
+                .Setup(_ => _.DeleteAsync(dbModel))
+                .Throws<Exception>();
+
+            // Act
+            var response = await controllerUnderTest.Delete(viewModel);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockCinemaService.Verify(_ => _.DeleteAsync(dbModel), Times.Once());
             var result = Assert.IsType<RedirectToActionResult>(response);
             Assert.True(result != null);
             Assert.True(result is IActionResult);

@@ -77,6 +77,16 @@ namespace Testing
             };
         }
 
+        public CinemaDeleteViewModel GetTestCinemaDelete()
+        {
+            return new CinemaDeleteViewModel
+            {
+                Id = default,
+                Name = string.Empty,
+                Description = string.Empty
+            };
+        }
+
         public List<Cinema> GetTestCinemas(int count)
         {
             return Enumerable.Repeat(GetTestCinema(), count).ToList();
