@@ -63,6 +63,20 @@ namespace Testing
             };
         }
 
+        public CinemaEditViewModel GetTestCinemaEdit()
+        {
+            return new CinemaEditViewModel
+            {
+                Id = default,
+                Name = string.Empty,
+                Description = string.Empty,
+                Location = string.Empty,
+                Address = string.Empty,
+                Contact = string.Empty,
+                Schedule = string.Empty
+            };
+        }
+
         public List<Cinema> GetTestCinemas(int count)
         {
             return Enumerable.Repeat(GetTestCinema(), count).ToList();

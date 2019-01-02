@@ -178,8 +178,8 @@ namespace Testing.CinemaTest
         }
 
         [Trait("Category", "Create")]
-        [Fact(DisplayName = "CinemaController/Create -> view")]
-        internal async void GivenCreateCalledThenReturnsCreateView()
+        [Fact(DisplayName = "CinemaController/Create/Get -> view")]
+        internal async void GivenCreateViewCalledThenReturnsCreateView()
         {
             // Arange
 
@@ -261,6 +261,127 @@ namespace Testing.CinemaTest
             Assert.True(result is IActionResult);
             Assert.True(result.Model != null);
             Assert.True(result.Model is CinemaCreateViewModel);
+        }
+
+        [Trait("Category", "Edit")]
+        [Fact(DisplayName = "CinemaController/Edit/Get -> view")]
+        internal async void GivenEditViewCalledWhenCinemaExistsThenReturnsEditView()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaEdit();
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync(dbModel);
+            mockMapper
+                .Setup(_ => _.Map<CinemaEditViewModel>(dbModel))
+                .Returns(viewModel);
+
+            // Act
+            var response = await controllerUnderTest.Edit((Guid)default);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<CinemaEditViewModel>(dbModel), Times.Once());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is CinemaEditViewModel);
+        }
+
+        [Trait("Category", "Edit")]
+        [Fact(DisplayName = "CinemaController/Edit/Get -> exception")]
+        internal async void GivenEditViewCalledWhenExceptionThrownThenHandleGracefully()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .Throws<Exception>();
+
+            // Act
+            var response = await controllerUnderTest.Edit((Guid)default);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<CinemaEditViewModel>(dbModel), Times.Never());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Home", result.ControllerName);
+        }
+
+        [Trait("Category", "Edit")]
+        [Fact(DisplayName = "CinemaController/Edit -> success")]
+        internal async void GivenEditCalledWhenInputIsValidThenEditsCinema()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaEdit();
+            mockMapper
+                .Setup(_ => _.Map<Cinema>(viewModel))
+                .Returns(dbModel);
+
+            // Act
+            var response = await controllerUnderTest.Edit(viewModel);
+
+            // Assert
+            mockMapper.Verify(_ => _.Map<Cinema>(viewModel), Times.Once());
+            mockCinemaService.Verify(_ => _.UpdateAsync(dbModel), Times.Once());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Details", result.ActionName);
+        }
+
+        [Trait("Category", "Edit")]
+        [Fact(DisplayName = "CinemaController/Edit -> invalid input")]
+        internal async void GivenEditCalledWhenInputIsNotValidThenHandlesGracefully()
+        {
+            // Arange
+            var viewModel = modelFaker.GetTestCinemaEdit();
+
+            // Act
+            controllerUnderTest.ModelState.AddModelError("key", "errorMessage");
+            var response = await controllerUnderTest.Edit(viewModel);
+
+            // Assert
+            mockMapper.Verify(_ => _.Map<Cinema>(viewModel), Times.Never());
+            mockCinemaService.Verify(_ => _.UpdateAsync(It.IsAny<Cinema>()), Times.Never());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is CinemaEditViewModel);
+        }
+
+        [Trait("Category", "Edit")]
+        [Fact(DisplayName = "CinemaController/Edit -> exception")]
+        internal async void GivenEditCalledWhenExceptionThrownThenHandleGracefully()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaEdit();
+            mockMapper
+                .Setup(_ => _.Map<Cinema>(viewModel))
+                .Returns(dbModel);
+            mockCinemaService
+                .Setup(_ => _.UpdateAsync(dbModel))
+                .Throws<Exception>();
+
+            // Act
+            var response = await controllerUnderTest.Edit(viewModel);
+
+            // Assert
+            mockMapper.Verify(_ => _.Map<Cinema>(viewModel), Times.Once());
+            mockCinemaService.Verify(_ => _.UpdateAsync(dbModel), Times.Once());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Home", result.ControllerName);
         }
     }
 }
