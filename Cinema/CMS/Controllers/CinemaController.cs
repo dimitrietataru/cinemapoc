@@ -88,10 +88,17 @@ namespace CMS.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            var cinema = await cinemaService.GetByIdAsync(id);
-            var result = mapper.Map<CinemaEditViewModel>(cinema);
+            try
+            {
+                var cinema = await cinemaService.GetByIdAsync(id);
+                var result = mapper.Map<CinemaEditViewModel>(cinema);
 
-            return View(result);
+                return View(result);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -99,6 +106,11 @@ namespace CMS.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(dto);
+                }
+
                 var cinema = mapper.Map<Cinema>(dto);
                 await cinemaService.UpdateAsync(cinema);
 
@@ -106,7 +118,7 @@ namespace CMS.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
 
