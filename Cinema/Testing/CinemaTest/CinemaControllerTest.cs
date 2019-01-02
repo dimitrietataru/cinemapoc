@@ -176,5 +176,91 @@ namespace Testing.CinemaTest
             Assert.Equal("Index", result.ActionName);
             Assert.Equal("Home", result.ControllerName);
         }
+
+        [Trait("Category", "Create")]
+        [Fact(DisplayName = "CinemaController/Create -> view")]
+        internal async void GivenCreateCalledThenReturnsCreateView()
+        {
+            // Arange
+
+            // Act
+            var response = await controllerUnderTest.Create();
+
+            // Assert
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+        }
+
+        [Trait("Category", "Create")]
+        [Fact(DisplayName = "CinemaController/Create -> success")]
+        internal async void GivenCreateCalledWhenInputIsValidThenCreatesCinema()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaCreate();
+            mockMapper
+                .Setup(_ => _.Map<Cinema>(viewModel))
+                .Returns(dbModel);
+
+            // Act
+            var response = await controllerUnderTest.Create(viewModel);
+
+            // Assert
+            mockMapper.Verify(_ => _.Map<Cinema>(viewModel), Times.Once());
+            mockCinemaService.Verify(_ => _.CreateAsync(dbModel), Times.Once());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+        }
+
+        [Trait("Category", "Create")]
+        [Fact(DisplayName = "CinemaController/Create -> invalid input")]
+        internal async void GivenCreateCalledWhenInputIsNotValidThenHandlesGracefully()
+        {
+            // Arange
+            var viewModel = modelFaker.GetTestCinemaCreate();
+
+            // Act
+            controllerUnderTest.ModelState.AddModelError("key", "errorMessage");
+            var response = await controllerUnderTest.Create(viewModel);
+
+            // Assert
+            mockMapper.Verify(_ => _.Map<Cinema>(viewModel), Times.Never());
+            mockCinemaService.Verify(_ => _.CreateAsync(It.IsAny<Cinema>()), Times.Never());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is CinemaCreateViewModel);
+        }
+
+        [Trait("Category", "Create")]
+        [Fact(DisplayName = "CinemaController/Create -> exception")]
+        internal async void GivenCreateCalledWhenExceptionThrownThenHandleGracefully()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaCreate();
+            mockMapper
+                .Setup(_ => _.Map<Cinema>(viewModel))
+                .Returns(dbModel);
+            mockCinemaService
+                .Setup(_ => _.CreateAsync(dbModel))
+                .Throws<Exception>();
+
+            // Act
+            var response = await controllerUnderTest.Create(viewModel);
+
+            // Assert
+            mockMapper.Verify(_ => _.Map<Cinema>(viewModel), Times.Once());
+            mockCinemaService.Verify(_ => _.CreateAsync(dbModel), Times.Once());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is CinemaCreateViewModel);
+        }
     }
 }
