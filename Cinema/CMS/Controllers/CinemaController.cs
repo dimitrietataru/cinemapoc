@@ -124,10 +124,17 @@ namespace CMS.Controllers
 
         public async Task<IActionResult> Delete(Guid id)
         {
-            var cinema = await cinemaService.GetByIdAsync(id);
-            var result = mapper.Map<CinemaDeleteViewModel>(cinema);
+            try
+            {
+                var cinema = await cinemaService.GetByIdAsync(id);
+                var result = mapper.Map<CinemaDeleteViewModel>(cinema);
 
-            return View(result);
+                return View(result);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -142,7 +149,7 @@ namespace CMS.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
     }
