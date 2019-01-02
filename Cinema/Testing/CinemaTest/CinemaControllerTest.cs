@@ -2,8 +2,10 @@
 using CMS.Controllers;
 using CMS.Models.Cinema;
 using Core.Interfaces;
+using Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -81,6 +83,28 @@ namespace Testing.CinemaTest
             Assert.True(result.Model != null);
             Assert.True(result.Model is List<CinemaIndexViewModel>);
             Assert.Same(viewModels, result.Model);
+        }
+
+        [Trait("Category", "Index")]
+        [Fact(DisplayName = "CinemaController/Index -> exception")]
+        internal async void GivenIndexCalledWhenExceptionThrownThenHandleGracefully()
+        {
+            // Arange
+            mockCinemaService
+                .Setup(_ => _.GetAllAsync())
+                .Throws<Exception>();
+
+            // Act
+            var response = await controllerUnderTest.Index();
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Once());
+            mockMapper.Verify(_ => _.Map<List<CinemaIndexViewModel>>(It.IsAny<List<Cinema>>()), Times.Never());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Home", result.ControllerName);
         }
     }
 }

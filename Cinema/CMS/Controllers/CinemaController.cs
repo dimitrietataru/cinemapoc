@@ -24,10 +24,18 @@ namespace CMS.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var cinemas = await cinemaService.GetAllAsync();
-            var result = mapper.Map<List<CinemaIndexViewModel>>(cinemas);
+            try
+            {
+                var cinemas = await cinemaService.GetAllAsync();
+                var result = mapper.Map<List<CinemaIndexViewModel>>(cinemas);
 
-            return View(result);
+                return View(result);
+            }
+            catch
+            {
+                // TODO: Add proper error page and Log
+                return RedirectToAction("Index", "Home"); 
+            }
         }
 
         public async Task<IActionResult> Details(Guid id)
