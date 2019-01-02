@@ -40,10 +40,22 @@ namespace CMS.Controllers
 
         public async Task<IActionResult> Details(Guid id)
         {
-            var cinema = await cinemaService.GetByIdAsync(id);
-            var result = mapper.Map<CinemaDetailsViewModel>(cinema);
+            try
+            {
+                var cinema = await cinemaService.GetByIdAsync(id);
+                if (cinema is null)
+                {
+                    return NotFound();
+                }
 
-            return View(result);
+                var result = mapper.Map<CinemaDetailsViewModel>(cinema);
+
+                return View(result);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         #pragma warning disable CS1998

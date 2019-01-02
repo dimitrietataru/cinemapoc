@@ -106,5 +106,75 @@ namespace Testing.CinemaTest
             Assert.Equal("Index", result.ActionName);
             Assert.Equal("Home", result.ControllerName);
         }
+
+        [Trait("Category", "Details")]
+        [Fact(DisplayName = "CinemaController/Details -> cinema")]
+        internal async void GivenDetailsCalledWhenCinemaExistsThenReturnsCinema()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestCinema();
+            var viewModel = modelFaker.GetTestCinemaDetails();
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync(dbModel);
+            mockMapper
+                .Setup(_ => _.Map<CinemaDetailsViewModel>(dbModel))
+                .Returns(viewModel);
+
+            // Act
+            var response = await controllerUnderTest.Details(default);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<CinemaDetailsViewModel>(dbModel), Times.Once());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is CinemaDetailsViewModel);
+            Assert.Same(viewModel, result.Model);
+        }
+
+        [Trait("Category", "Details")]
+        [Fact(DisplayName = "CinemaController/Details -> not found")]
+        internal async void GivenDetailsCalledWhenCinemaNotFoundThenReturnsNotFound()
+        {
+            // Arange
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync((Cinema)null);
+
+            // Act
+            var response = await controllerUnderTest.Details(default);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<CinemaDetailsViewModel>(It.IsAny<Cinema>()), Times.Never());
+            var result = Assert.IsType<NotFoundResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+        }
+
+        [Trait("Category", "Details")]
+        [Fact(DisplayName = "CinemaController/Details -> exception")]
+        internal async void GivenDetailsCalledWhenExceptionThrownThenHandleGracefully()
+        {
+            // Arange
+            mockCinemaService
+                .Setup(_ => _.GetByIdAsync(default))
+                .Throws<Exception>();
+
+            // Act
+            var response = await controllerUnderTest.Details(default);
+
+            // Assert
+            mockCinemaService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<CinemaDetailsViewModel>(It.IsAny<Cinema>()), Times.Never());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Home", result.ControllerName);
+        }
     }
 }
