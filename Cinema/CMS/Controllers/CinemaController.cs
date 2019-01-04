@@ -43,7 +43,9 @@ namespace CMS.Controllers
         public async Task<IActionResult> Create()
         #pragma warning restore CS1998
         {
-            return View();
+            var dto = new CinemaCreateViewModel();
+
+            return View(dto);
         }
 
         [HttpPost, ValidateAntiForgeryToken]

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Core.Models.NoSql;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -33,8 +35,6 @@ namespace CMS.Models.Cinema
         [DisplayName("Contact")]
         public string Contact { get; set; }
 
-        [Required(ErrorMessage = "Schedule is required")]
-        [DisplayName("Schedule")]
-        public string Schedule { get; set; }
+        public List<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }
