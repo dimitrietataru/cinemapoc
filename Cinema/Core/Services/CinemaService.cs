@@ -26,6 +26,18 @@ namespace Core.Services
                .ToListAsync();
         }
 
+        public async Task<List<Cinema>> GetPagedAsync(int page, int size, string orderBy, bool order)
+        {
+            return await context
+               .Cinemas
+               .AsNoTracking()
+               .OrderBy(cinema => order ? cinema.GetType().GetProperty(orderBy).GetValue(cinema, null) : null)
+               .OrderByDescending(cinema => !order ? cinema.GetType().GetProperty(orderBy).GetValue(cinema, null) : null)
+               .Skip(page * size)
+               .Take(size)
+               .ToListAsync();
+        }
+
         public async Task<Cinema> GetEagerByIdAsync(Guid id)
         {
             return await context

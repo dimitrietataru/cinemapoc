@@ -40,10 +40,16 @@
             @Html.DisplayFor(model => model.Contact)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Schedule)
+            @Html.DisplayNameFor(model => model.Schedules)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Schedule)
+            @foreach (var item in Model.Schedules)
+            {
+                @item.Day <text> - </text>
+                @item.Open <text> - </text>
+                @item.Close
+                <br />
+            }
         </dd>
     </dl>
 </div>
