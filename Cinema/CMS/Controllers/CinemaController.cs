@@ -3,7 +3,6 @@ using CMS.Models;
 using CMS.Models.Cinema;
 using Core.Interfaces;
 using Core.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,24 +25,44 @@ namespace CMS.Controllers
 
         public async Task<IActionResult> Index(int page = 1, int size = 10, string orderBy = "Name", bool order = true)
         {
-            var cinemas = await cinemaService.GetPagedAsync(page - 1, size, orderBy, order);
-            var count = await cinemaService.GetCountAsync();
-
-            var dto = new PagerViewModel<CinemaIndexViewModel>()
+            try
             {
-                Items = mapper.Map<List<CinemaIndexViewModel>>(cinemas),
-                Pager = new Pager(page, size, orderBy, order, count)
-            };
+                var cinemas = await cinemaService.GetPagedAsync(page - 1, size, orderBy, order);
+                var count = await cinemaService.GetCountAsync();
 
-            return View(dto);
+                var dto = new PagerViewModel<CinemaIndexViewModel>()
+                {
+                    Items = mapper.Map<List<CinemaIndexViewModel>>(cinemas),
+                    Pager = new Pager(page, size, orderBy, order, count)
+                };
+
+                return View(dto);
+            }
+            catch
+            {
+                // TODO: Add proper error page and Log
+                return RedirectToAction("Index", "Home"); 
+            }
         }
 
         public async Task<IActionResult> Details(Guid id)
         {
-            var cinema = await cinemaService.GetByIdAsync(id);
-            var result = mapper.Map<CinemaDetailsViewModel>(cinema);
+            try
+            {
+                var cinema = await cinemaService.GetByIdAsync(id);
+                if (cinema is null)
+                {
+                    return NotFound();
+                }
 
-            return View(result);
+                var result = mapper.Map<CinemaDetailsViewModel>(cinema);
+
+                return View(result);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         #pragma warning disable CS1998
@@ -78,10 +97,17 @@ namespace CMS.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            var cinema = await cinemaService.GetByIdAsync(id);
-            var result = mapper.Map<CinemaEditViewModel>(cinema);
+            try
+            {
+                var cinema = await cinemaService.GetByIdAsync(id);
+                var result = mapper.Map<CinemaEditViewModel>(cinema);
 
-            return View(result);
+                return View(result);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -89,6 +115,11 @@ namespace CMS.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(dto);
+                }
+
                 var cinema = mapper.Map<Cinema>(dto);
                 await cinemaService.UpdateAsync(cinema);
 
@@ -96,16 +127,23 @@ namespace CMS.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
 
         public async Task<IActionResult> Delete(Guid id)
         {
-            var cinema = await cinemaService.GetByIdAsync(id);
-            var result = mapper.Map<CinemaDeleteViewModel>(cinema);
+            try
+            {
+                var cinema = await cinemaService.GetByIdAsync(id);
+                var result = mapper.Map<CinemaDeleteViewModel>(cinema);
 
-            return View(result);
+                return View(result);
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -120,7 +158,7 @@ namespace CMS.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
     }
