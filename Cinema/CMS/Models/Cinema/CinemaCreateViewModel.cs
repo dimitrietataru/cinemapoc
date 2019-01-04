@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using Core.Models.NoSql;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using static System.Linq.Enumerable;
 
 namespace CMS.Models.Cinema
 {
@@ -30,8 +33,6 @@ namespace CMS.Models.Cinema
         [DisplayName("Contact")]
         public string Contact { get; set; }
 
-        [Required(ErrorMessage = "Schedule is required")]
-        [DisplayName("Schedule")]
-        public string Schedule { get; set; }
+        public List<Schedule> Schedules { get; set; } = Range(0, 7).Select(d => new Schedule(d)).ToList();
     }
 }

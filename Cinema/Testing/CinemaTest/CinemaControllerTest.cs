@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Controllers;
+using CMS.Models;
 using CMS.Models.Cinema;
 using Core.Interfaces;
 using Core.Models;
@@ -37,8 +38,11 @@ namespace Testing.CinemaTest
             var dbModels = modelFaker.GetTestCinemas(10);
             var viewModels = modelFaker.GetTestCinemaIndexes(10);
             mockCinemaService
-                .Setup(_ => _.GetAllAsync())
+                .Setup(_ => _.GetPagedAsync(0, 10, "Name", true))
                 .ReturnsAsync(dbModels);
+            mockCinemaService
+                .Setup(_ => _.GetCountAsync())
+                .ReturnsAsync(10);
             mockMapper
                 .Setup(_ => _.Map<List<CinemaIndexViewModel>>(dbModels))
                 .Returns(viewModels);
@@ -47,14 +51,14 @@ namespace Testing.CinemaTest
             var response = await controllerUnderTest.Index();
 
             // Assert
-            mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Once());
+            mockCinemaService.Verify(_ => _.GetPagedAsync(0, 10, "Name", true), Times.Once());
             mockMapper.Verify(_ => _.Map<List<CinemaIndexViewModel>>(dbModels), Times.Once());
             var result = Assert.IsType<ViewResult>(response);
             Assert.True(result != null);
             Assert.True(result is IActionResult);
             Assert.True(result.Model != null);
-            Assert.True(result.Model is List<CinemaIndexViewModel>);
-            Assert.Same(viewModels, result.Model);
+            var resultModel = Assert.IsType<PagerViewModel<CinemaIndexViewModel>>(result.Model);
+            Assert.Same(viewModels, resultModel.Items);
         }
 
         [Trait("Category", "Index")]
@@ -65,8 +69,11 @@ namespace Testing.CinemaTest
             var dbModels = modelFaker.GetTestCinemas(0);
             var viewModels = modelFaker.GetTestCinemaIndexes(0);
             mockCinemaService
-                .Setup(_ => _.GetAllAsync())
+                .Setup(_ => _.GetPagedAsync(0, 10, "Name", true))
                 .ReturnsAsync(dbModels);
+            mockCinemaService
+                .Setup(_ => _.GetCountAsync())
+                .ReturnsAsync(0);
             mockMapper
                 .Setup(_ => _.Map<List<CinemaIndexViewModel>>(dbModels))
                 .Returns(viewModels);
@@ -75,14 +82,14 @@ namespace Testing.CinemaTest
             var response = await controllerUnderTest.Index();
 
             // Assert
-            mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Once());
+            mockCinemaService.Verify(_ => _.GetPagedAsync(0, 10, "Name", true), Times.Once());
             mockMapper.Verify(_ => _.Map<List<CinemaIndexViewModel>>(dbModels), Times.Once());
             var result = Assert.IsType<ViewResult>(response);
             Assert.True(result != null);
             Assert.True(result is IActionResult);
             Assert.True(result.Model != null);
-            Assert.True(result.Model is List<CinemaIndexViewModel>);
-            Assert.Same(viewModels, result.Model);
+            var resultModel = Assert.IsType<PagerViewModel<CinemaIndexViewModel>>(result.Model);
+            Assert.Same(viewModels, resultModel.Items);
         }
 
         [Trait("Category", "Index")]
@@ -91,14 +98,15 @@ namespace Testing.CinemaTest
         {
             // Arange
             mockCinemaService
-                .Setup(_ => _.GetAllAsync())
+                .Setup(_ => _.GetPagedAsync(0, 10, "Name", true))
                 .Throws<Exception>();
 
             // Act
             var response = await controllerUnderTest.Index();
 
             // Assert
-            mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Once());
+            mockCinemaService.Verify(_ => _.GetPagedAsync(0, 10, "Name", true), Times.Once());
+            mockCinemaService.Verify(_ => _.GetCountAsync(), Times.Never());
             mockMapper.Verify(_ => _.Map<List<CinemaIndexViewModel>>(It.IsAny<List<Cinema>>()), Times.Never());
             var result = Assert.IsType<RedirectToActionResult>(response);
             Assert.True(result != null);

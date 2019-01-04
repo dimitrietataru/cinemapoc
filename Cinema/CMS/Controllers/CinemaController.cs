@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CMS.Models;
 using CMS.Models.Cinema;
 using Core.Interfaces;
 using Core.Models;
@@ -22,14 +23,20 @@ namespace CMS.Controllers
             this.mapper = mapper;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int size = 10, string orderBy = "Name", bool order = true)
         {
             try
             {
-                var cinemas = await cinemaService.GetAllAsync();
-                var result = mapper.Map<List<CinemaIndexViewModel>>(cinemas);
+                var cinemas = await cinemaService.GetPagedAsync(page - 1, size, orderBy, order);
+                var count = await cinemaService.GetCountAsync();
 
-                return View(result);
+                var dto = new PagerViewModel<CinemaIndexViewModel>()
+                {
+                    Items = mapper.Map<List<CinemaIndexViewModel>>(cinemas),
+                    Pager = new Pager(page, size, orderBy, order, count)
+                };
+
+                return View(dto);
             }
             catch
             {
@@ -62,7 +69,9 @@ namespace CMS.Controllers
         public async Task<IActionResult> Create()
         #pragma warning restore CS1998
         {
-            return View();
+            var dto = new CinemaCreateViewModel();
+
+            return View(dto);
         }
 
         [HttpPost, ValidateAntiForgeryToken]

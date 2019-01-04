@@ -15,5 +15,6 @@ namespace Core.Interfaces
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         Task SaveAsync();
+        Task<int> GetCountAsync();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CMS.Models.Cinema;
 using Core.Models;
+using Core.Models.NoSql;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,7 +47,7 @@ namespace Testing
                 Location = string.Empty,
                 Address = string.Empty,
                 Contact = string.Empty,
-                Schedule = string.Empty
+                Schedules = new List<Schedule>()
             };
         }
 
@@ -59,7 +60,7 @@ namespace Testing
                 Location = string.Empty,
                 Address = string.Empty,
                 Contact = string.Empty,
-                Schedule = string.Empty
+                Schedules = new List<Schedule>()
             };
         }
 
@@ -73,7 +74,7 @@ namespace Testing
                 Location = string.Empty,
                 Address = string.Empty,
                 Contact = string.Empty,
-                Schedule = string.Empty
+                Schedules = new List<Schedule>()
             };
         }
 

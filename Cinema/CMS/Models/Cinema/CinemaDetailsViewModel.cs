@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Core.Models.NoSql;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace CMS.Models.Cinema
 {
@@ -19,7 +21,6 @@ namespace CMS.Models.Cinema
         [DisplayName("Contact")]
         public string Contact { get; set; }
 
-        [DisplayName("Schedule")]
-        public string Schedule { get; set; }
+        public List<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }
