@@ -67,5 +67,10 @@ namespace Core.Services
         {
             await context.SaveChangesAsync();
         }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await context.Set<TEntity>().CountAsync();
+        }
     }
 }
