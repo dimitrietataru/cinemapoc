@@ -18,6 +18,7 @@ namespace CMS
                 options.UseSqlServer(Configuration.GetConnectionString("Production")), ServiceLifetime.Scoped);
 
             services.AddScoped<ICinemaService, CinemaService>();
+            services.AddScoped<IMovieService, MovieService>();
         }
     }
 }
