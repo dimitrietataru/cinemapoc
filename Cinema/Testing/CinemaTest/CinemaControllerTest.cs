@@ -8,11 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Testing.CinemaTest
 {
-    [Trait("Categoty", ". Cinema Controller")]
+    [Trait("Category", ". Cinema Controller")]
     public class CinemaControllerTest
     {
         private readonly ModelFaker modelFaker;
@@ -38,7 +39,7 @@ namespace Testing.CinemaTest
             var dbModels = modelFaker.GetTestCinemas(10);
             var viewModels = modelFaker.GetTestCinemaIndexes(10);
             mockCinemaService
-                .Setup(_ => _.GetPagedAsync(0, 10, "Name", true))
+                .Setup(_ => _.GetPagedAsync(It.IsAny<IQueryable<Cinema>>(), 0, 10))
                 .ReturnsAsync(dbModels);
             mockCinemaService
                 .Setup(_ => _.GetCountAsync())
@@ -51,7 +52,7 @@ namespace Testing.CinemaTest
             var response = await controllerUnderTest.Index();
 
             // Assert
-            mockCinemaService.Verify(_ => _.GetPagedAsync(0, 10, "Name", true), Times.Once());
+            mockCinemaService.Verify(_ => _.GetPagedAsync(It.IsAny<IQueryable<Cinema>>(), 0, 10), Times.Once());
             mockMapper.Verify(_ => _.Map<List<CinemaIndexViewModel>>(dbModels), Times.Once());
             var result = Assert.IsType<ViewResult>(response);
             Assert.True(result != null);
@@ -69,7 +70,7 @@ namespace Testing.CinemaTest
             var dbModels = modelFaker.GetTestCinemas(0);
             var viewModels = modelFaker.GetTestCinemaIndexes(0);
             mockCinemaService
-                .Setup(_ => _.GetPagedAsync(0, 10, "Name", true))
+                .Setup(_ => _.GetPagedAsync(It.IsAny<IQueryable<Cinema>>(), 0, 10))
                 .ReturnsAsync(dbModels);
             mockCinemaService
                 .Setup(_ => _.GetCountAsync())
@@ -82,7 +83,7 @@ namespace Testing.CinemaTest
             var response = await controllerUnderTest.Index();
 
             // Assert
-            mockCinemaService.Verify(_ => _.GetPagedAsync(0, 10, "Name", true), Times.Once());
+            mockCinemaService.Verify(_ => _.GetPagedAsync(It.IsAny<IQueryable<Cinema>>(), 0, 10), Times.Once());
             mockMapper.Verify(_ => _.Map<List<CinemaIndexViewModel>>(dbModels), Times.Once());
             var result = Assert.IsType<ViewResult>(response);
             Assert.True(result != null);
@@ -98,14 +99,14 @@ namespace Testing.CinemaTest
         {
             // Arange
             mockCinemaService
-                .Setup(_ => _.GetPagedAsync(0, 10, "Name", true))
+                .Setup(_ => _.GetPagedAsync(It.IsAny<IQueryable<Cinema>>(), 0, 10))
                 .Throws<Exception>();
 
             // Act
             var response = await controllerUnderTest.Index();
 
             // Assert
-            mockCinemaService.Verify(_ => _.GetPagedAsync(0, 10, "Name", true), Times.Once());
+            mockCinemaService.Verify(_ => _.GetPagedAsync(It.IsAny<IQueryable<Cinema>>(), 0, 10), Times.Once());
             mockCinemaService.Verify(_ => _.GetCountAsync(), Times.Never());
             mockMapper.Verify(_ => _.Map<List<CinemaIndexViewModel>>(It.IsAny<List<Cinema>>()), Times.Never());
             var result = Assert.IsType<RedirectToActionResult>(response);

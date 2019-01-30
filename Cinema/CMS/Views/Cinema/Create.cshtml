@@ -1,59 +1,112 @@
 ﻿@model CMS.Models.Cinema.CinemaCreateViewModel
-
 @{
     ViewData["Title"] = "Create cinema";
 }
 
-<h2>Create</h2>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div class="col-lg-12 col-md-12">
+    <div class="panel panel-default mt-40">
+        <div class="panel-heading">
+            <h4>CREATE CINEMA</h4>
+        </div>
+        <div class="panel-body panel-body-responsive">
+            <div class="col-lg-12 col-md-12 row">
+                <form asp-action="Create">
+                    <div class="col-lg-4 col-md-4">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group has-feedback">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                            <i class="form-control-feedback glyphicon glyphicon-asterisk"></i>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                            <i class="form-control-feedback glyphicon glyphicon-info-sign"></i>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label asp-for="Location" class="control-label"></label>
+                            <input asp-for="Location" class="form-control" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                            <i class="form-control-feedback glyphicon glyphicon-map-marker"></i>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                            <i class="form-control-feedback glyphicon glyphicon-home"></i>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label asp-for="Contact" class="control-label"></label>
+                            <input asp-for="Contact" class="form-control" />
+                            <span asp-validation-for="Contact" class="text-danger"></span>
+                            <i class="form-control-feedback glyphicon glyphicon-earphone"></i>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <table class="table text-center">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-lg-1 col-md-1" />
+                                            @for (int i = 0; i < Model.Schedules.Count; ++i)
+                                            {
+                                                <th class="text-center">
+                                                    <input type="hidden" asp-for="@Model.Schedules[i].Day" class="form-control" />
+                                                    @Model.Schedules[i].Day.ToString()
+                                                </th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">
+                                                Open
+                                            </td>
+                                            @for (int i = 0; i < Model.Schedules.Count; ++i)
+                                            {
+                                                <td class="text-center">
+                                                    <input asp-for="@Model.Schedules[i].Open" asp-format="{0:h\:mm}" class="form-control text-center" />
+                                                </td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">
+                                                Close
+                                            </td>
+                                            @for (int i = 0; i < Model.Schedules.Count; ++i)
+                                            {
+                                                <td class="text-center">
+                                                    <input asp-for="@Model.Schedules[i].Close" asp-format="{0:h\:mm}" class="form-control text-center" />
+                                                </td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-default" />
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 btn-group">
+                    <a href="@Url.Action("Index", "Cinema")" title="Back to list" class="btn btn-default">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </a>
+                    <a href="@Url.Action("Index", "Home")" title="Home" class="btn btn-default">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Contact" class="control-label"></label>
-                <input asp-for="Contact" class="form-control" />
-                <span asp-validation-for="Contact" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @for (int i = 0; i < Model.Schedules.Count; i++)
-                {
-                    <input type="hidden" asp-for="@Model.Schedules[i].Day" class="form-control" />
-                    @Model.Schedules[i].Day.ToString();
-                    <input asp-for="@Model.Schedules[i].Open" class="form-control" />
-                    <input asp-for="@Model.Schedules[i].Close" class="form-control" />
-                }
-             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

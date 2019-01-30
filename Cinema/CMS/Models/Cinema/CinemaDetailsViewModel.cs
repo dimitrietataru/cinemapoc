@@ -1,4 +1,5 @@
 ﻿using Core.Models.NoSql;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -6,6 +7,8 @@ namespace CMS.Models.Cinema
 {
     public class CinemaDetailsViewModel
     {
+        public Guid Id { get; set; }
+
         [DisplayName("Name")]
         public string Name { get; set; }
 

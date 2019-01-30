@@ -68,6 +68,13 @@ namespace Core.Services
             await context.SaveChangesAsync();
         }
 
+        public IQueryable<TEntity> GetBaseQuery(bool isTracked = false)
+        {
+            return isTracked
+                ? context.Set<TEntity>()
+                : context.Set<TEntity>().AsNoTracking();
+        }
+
         public async Task<int> GetCountAsync()
         {
             return await context.Set<TEntity>().CountAsync();

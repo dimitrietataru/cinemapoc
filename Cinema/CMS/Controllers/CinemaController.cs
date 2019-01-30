@@ -27,8 +27,9 @@ namespace CMS.Controllers
         {
             try
             {
-                var cinemas = await cinemaService.GetPagedAsync(page - 1, size, orderBy, order);
-                var count = await cinemaService.GetCountAsync();
+                var pagedQuery = cinemaService.GetPagedQuery(orderBy, order);
+                var cinemas = await cinemaService.GetPagedAsync(pagedQuery, page - 1, size);
+                var count = await cinemaService.GetPagedCountAsync(pagedQuery);
 
                 var dto = new PagerViewModel<CinemaIndexViewModel>()
                 {

@@ -1,5 +1,6 @@
 ﻿using Core.Models.Base;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Core.Interfaces
@@ -15,6 +16,7 @@ namespace Core.Interfaces
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         Task SaveAsync();
+        IQueryable<TEntity> GetBaseQuery(bool isTracked = false);
         Task<int> GetCountAsync();
     }
 }

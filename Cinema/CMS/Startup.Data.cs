@@ -14,8 +14,9 @@ namespace CMS
         {
             services.AddAutoMapper();
 
-            services.AddDbContext<CinemaContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("Production")), ServiceLifetime.Scoped);
+            string dbConnection = Configuration.GetConnectionString("SqlServer");
+            services.AddDbContext<CinemaContext>(
+                options => options.UseSqlServer(dbConnection), ServiceLifetime.Scoped);
 
             services.AddScoped<ICinemaService, CinemaService>();
         }

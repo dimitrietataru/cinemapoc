@@ -26,18 +26,6 @@ namespace Core.Services
                .ToListAsync();
         }
 
-        public async Task<List<Cinema>> GetPagedAsync(int page, int size, string orderBy, bool order)
-        {
-            return await context
-               .Cinemas
-               .AsNoTracking()
-               .OrderBy(cinema => order ? cinema.GetType().GetProperty(orderBy).GetValue(cinema, null) : null)
-               .OrderByDescending(cinema => !order ? cinema.GetType().GetProperty(orderBy).GetValue(cinema, null) : null)
-               .Skip(page * size)
-               .Take(size)
-               .ToListAsync();
-        }
-
         public async Task<Cinema> GetEagerByIdAsync(Guid id)
         {
             return await context
@@ -63,6 +51,51 @@ namespace Core.Services
                     id => id,
                     (cinema, id) => cinema)
                 .ToListAsync();
+        }
+
+        public IQueryable<Cinema> GetPagedQuery(string orderBy, bool order)
+        {
+            var query = GetBaseQuery();
+
+            ////string filter = "";
+            ////query = query.Where(cinema =>
+            ////    cinema.Name.Contains(filter)
+            ////    || cinema.Address.Contains(filter)
+            ////    || cinema.Contact.Contains(filter)
+            ////    || cinema.Location.Contains(filter));
+
+            switch (orderBy)
+            {
+                case "Name" when order is true:
+                    query = query.OrderBy(cinema => cinema.Name);
+                    break;
+                case "Name" when order is false:
+                    query = query.OrderByDescending(cinema => cinema.Name);
+                    break;
+                case "Location" when order is true:
+                    query = query.OrderBy(cinema => cinema.Location);
+                    break;
+                case "Location" when order is false:
+                    query = query.OrderByDescending(cinema => cinema.Location);
+                    break;
+                default:
+                    break;
+            }
+
+            return query;
+        }
+
+        public async Task<List<Cinema>> GetPagedAsync(IQueryable<Cinema> query, int page, int size)
+        {
+            return await query
+                .Skip(page * size)
+                .Take(size)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetPagedCountAsync(IQueryable<Cinema> pagedQuery)
+        {
+            return await pagedQuery.CountAsync();
         }
     }
 }
