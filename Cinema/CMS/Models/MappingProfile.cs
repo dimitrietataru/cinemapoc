@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Models.Cinema;
+using CMS.Models.Movie;
 using Core.Models;
 using Core.Models.NoSql;
 using Newtonsoft.Json;
@@ -29,6 +30,8 @@ namespace CMS.Mapping
                     .MapFrom(src => JsonConvert.SerializeObject(src.Schedules)))
                 .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Cinema, CinemaDeleteViewModel>();
+
+            CreateMap<Movie, IndexViewModel>();
         }
     }
 }

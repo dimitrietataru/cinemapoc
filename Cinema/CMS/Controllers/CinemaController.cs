@@ -31,15 +31,16 @@ namespace CMS.Controllers
                 var cinemas = await cinemaService.GetPagedAsync(pagedQuery, page - 1, size);
                 var count = await cinemaService.GetPagedCountAsync(pagedQuery);
 
-                var dto = new PagerViewModel<CinemaIndexViewModel>()
+                var items = mapper.Map<List<CinemaIndexViewModel>>(cinemas);
+                var dto = new PagerViewModel<CinemaIndexViewModel>(items, page, size, count)
                 {
                     Items = mapper.Map<List<CinemaIndexViewModel>>(cinemas),
-                    Pager = new Pager(page, size, orderBy, order, count)
+                    Pager = new Pager(page, size, orderBy, order, count, "")
                 };
 
                 return View(dto);
             }
-            catch
+            catch (Exception e)
             {
                 // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Home"); 

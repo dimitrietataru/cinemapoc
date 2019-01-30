@@ -19,6 +19,7 @@ namespace CMS
                 options => options.UseSqlServer(dbConnection), ServiceLifetime.Scoped);
 
             services.AddScoped<ICinemaService, CinemaService>();
+            services.AddScoped<IMovieService, MovieService>();
         }
     }
 }

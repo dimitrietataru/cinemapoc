@@ -3,6 +3,9 @@ using Core.Models;
 using Core.Models.NoSql;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Models.Enums;
+using System;
+using CMS.Models.Movie;
 
 namespace Testing
 {
@@ -26,6 +29,31 @@ namespace Testing
             };
         }
 
+        public Movie GetTestMovie()
+        {
+            return new Movie
+            {
+                Id = default,
+                Name = default,
+                Description = default,
+                Duration = default,
+                Actors = default,
+                Studio = default,
+                ProjectionType = ProjectionType.D2D,
+                Rating = MovieRating.G,
+                Genre = default,
+                TrailerUrl = default,
+                PosterUrl = default,
+                ImbdUrl = default,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+                CreatedBy = default,
+                UpdatedAt = default,
+                UpdatedBy = default,
+                IsDeleted = default
+            };
+        }
+
         public CinemaIndexViewModel GetTestCinemaIndex()
         {
             return new CinemaIndexViewModel
@@ -35,6 +63,17 @@ namespace Testing
                 Location = string.Empty,
                 Address = string.Empty,
                 Contact = string.Empty
+            };
+        }
+
+        public MovieIndexViewModel GetTestMovieIndex()
+        {
+            var movies = GetTestMovies(10);
+
+            return new MovieIndexViewModel(movies, 1, 10, 10)
+            {
+                OrderBy = default,
+                OrderDesc = default
             };
         }
 
@@ -93,9 +132,19 @@ namespace Testing
             return Enumerable.Repeat(GetTestCinema(), count).ToList();
         }
 
+        public List<Movie> GetTestMovies(int count)
+        {
+            return Enumerable.Repeat(GetTestMovie(), count).ToList();
+        }
+
         public List<CinemaIndexViewModel> GetTestCinemaIndexes(int count)
         {
             return Enumerable.Repeat(GetTestCinemaIndex(), count).ToList();
+        }
+
+        public List<MovieIndexViewModel> GetTestMovieIndexes(int count)
+        {
+            return Enumerable.Repeat(GetTestMovieIndex(), count).ToList();
         }
     }
 }

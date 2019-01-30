@@ -1,4 +1,6 @@
 ﻿@model CMS.Models.PagerViewModel<CMS.Models.Cinema.CinemaIndexViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PagedList.Core.Mvc
 @{
     ViewData["Title"] = "Cinemas";
 }
@@ -88,8 +90,9 @@
             </table>
         </div>
         <div class="panel-footer text-center">
-            @Html.ActionLink("<<<", "Index", new { page = Model.Pager.page - 1, size = Model.Pager.size, orderBy = Model.Pager.orderBy, order = Model.Pager.order })
-            @Html.ActionLink(">>>", "Index", new { page = Model.Pager.page + 1, size = Model.Pager.size, orderBy = Model.Pager.orderBy, order = Model.Pager.order })
+            <pager list="@Model" asp-controller="Cinema" asp-action="Index" />
+            @*@Html.ActionLink("<<<", "Index", new { page = Model.Pager.page - 1, size = Model.Pager.size, orderBy = Model.Pager.orderBy, order = Model.Pager.order })
+            @Html.ActionLink(">>>", "Index", new { page = Model.Pager.page + 1, size = Model.Pager.size, orderBy = Model.Pager.orderBy, order = Model.Pager.order })*@
         </div>
     </div>
 </div>
