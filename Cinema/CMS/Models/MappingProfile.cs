@@ -12,6 +12,23 @@ namespace CMS.Mapping
     {
         public MappingProfile()
         {
+            MapAuditoriumModels();
+            MapBookingModels();
+            MapCinemaModels();
+            MapEventModels();
+            MapMovieModels();
+        }
+
+        private void MapAuditoriumModels()
+        {
+        }
+
+        private void MapBookingModels()
+        {
+        }
+
+        private void MapCinemaModels()
+        {
             CreateMap<Cinema, CinemaIndexViewModel>();
             CreateMap<Cinema, CinemaDetailsViewModel>();
             CreateMap<Cinema, CinemaDetailsViewModel>()
@@ -30,8 +47,15 @@ namespace CMS.Mapping
                     .MapFrom(src => JsonConvert.SerializeObject(src.Schedules)))
                 .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Cinema, CinemaDeleteViewModel>();
+        }
 
-            CreateMap<Movie, IndexViewModel>();
+        private void MapEventModels()
+        {
+        }
+
+        private void MapMovieModels()
+        {
+            CreateMap<Movie, MovieIndexViewModel>();
         }
     }
 }

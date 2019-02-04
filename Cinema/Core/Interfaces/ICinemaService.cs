@@ -12,7 +12,7 @@ namespace Core.Interfaces
         Task<Cinema> GetEagerByIdAsync(Guid id);
         Task<List<Cinema>> GetEagerByIdsAsync(List<Guid> ids);
 
-        IQueryable<Cinema> GetPagedQuery(string orderBy, bool order);
+        IQueryable<Cinema> GetPagedQuery(string orderBy, bool order, string filter, bool isExact);
         Task<List<Cinema>> GetPagedAsync(IQueryable<Cinema> query, int page, int size);
         Task<int> GetPagedCountAsync(IQueryable<Cinema> pagedQuery);
     }

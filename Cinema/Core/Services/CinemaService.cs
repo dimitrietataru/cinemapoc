@@ -53,16 +53,29 @@ namespace Core.Services
                 .ToListAsync();
         }
 
-        public IQueryable<Cinema> GetPagedQuery(string orderBy, bool order)
+        public IQueryable<Cinema> GetPagedQuery(string orderBy, bool order, string filter, bool isExact)
         {
             var query = GetBaseQuery();
 
-            ////string filter = "";
-            ////query = query.Where(cinema =>
-            ////    cinema.Name.Contains(filter)
-            ////    || cinema.Address.Contains(filter)
-            ////    || cinema.Contact.Contains(filter)
-            ////    || cinema.Location.Contains(filter));
+            if (!string.IsNullOrWhiteSpace(filter) && isExact)
+            {
+                query = query
+                    .Where(cinema =>
+                        cinema.Name.Equals(filter)
+                        || cinema.Location.Equals(filter)
+                        || cinema.Address.Equals(filter)
+                        || cinema.Contact.Equals(filter));
+            }
+            else if (!string.IsNullOrWhiteSpace(filter) && !isExact)
+            {
+                filter = filter.ToLower();
+                query = query
+                    .Where(cinema =>
+                        cinema.Name.ToLower().Contains(filter)
+                        || cinema.Location.ToLower().Contains(filter)
+                        || cinema.Address.ToLower().Contains(filter)
+                        || cinema.Contact.ToLower().Contains(filter));
+            }
 
             switch (orderBy)
             {

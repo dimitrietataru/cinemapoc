@@ -15,28 +15,29 @@ namespace CMS.Controllers
         private readonly ICinemaService cinemaService;
         private readonly IMapper mapper;
 
-        public CinemaController(
-            ICinemaService cinemaService,
-            IMapper mapper)
+        public CinemaController(ICinemaService cinemaService, IMapper mapper)
         {
             this.cinemaService = cinemaService;
             this.mapper = mapper;
         }
 
-        public async Task<IActionResult> Index(int page = 1, int size = 10, string orderBy = "Name", bool order = true)
+        public async Task<IActionResult> Index(
+            int page = 1,
+            int size = 10,
+            string orderBy = "Name",
+            bool isAsc = true,
+            string filter = "",
+            bool isExact = false)
         {
             try
             {
-                var pagedQuery = cinemaService.GetPagedQuery(orderBy, order);
+                var pagedQuery = cinemaService.GetPagedQuery(orderBy, isAsc, filter, isExact);
                 var cinemas = await cinemaService.GetPagedAsync(pagedQuery, page - 1, size);
                 var count = await cinemaService.GetPagedCountAsync(pagedQuery);
 
-                var items = mapper.Map<List<CinemaIndexViewModel>>(cinemas);
-                var dto = new PagerViewModel<CinemaIndexViewModel>(items, page, size, count)
-                {
-                    Items = mapper.Map<List<CinemaIndexViewModel>>(cinemas),
-                    Pager = new Pager(page, size, orderBy, order, count, "")
-                };
+                var viewItems = mapper.Map<List<CinemaIndexViewModel>>(cinemas);
+                var dto = new PagedViewModel<CinemaIndexViewModel>(
+                    viewItems, page, size, orderBy, isAsc, filter, isExact, count);
 
                 return View(dto);
             }

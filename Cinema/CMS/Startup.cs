@@ -31,7 +31,7 @@ namespace CMS
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (!env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
             }
