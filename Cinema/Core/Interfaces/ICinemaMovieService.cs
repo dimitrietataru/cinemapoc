@@ -1,6 +1,6 @@
 ﻿namespace Core.Interfaces
 {
-    public interface ICinemaMovie
+    public interface ICinemaMovieService
     {
     }
 }
