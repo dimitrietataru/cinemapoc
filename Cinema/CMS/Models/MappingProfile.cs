@@ -56,6 +56,11 @@ namespace CMS.Mapping
         private void MapMovieModels()
         {
             CreateMap<Movie, MovieIndexViewModel>();
+            CreateMap<Movie, MovieCreateViewModel>().ReverseMap();
+            CreateMap<Movie, MovieEditViewModel>()
+                .ForMember(a => a.CinemaId, opt => opt.Ignore());
+            CreateMap<MovieEditViewModel, Movie>();
+            CreateMap<Movie, MovieDetailsViewModel>();
         }
     }
 }
