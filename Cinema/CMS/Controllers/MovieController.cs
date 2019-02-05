@@ -6,6 +6,7 @@ using Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CMS.Controllers
@@ -18,7 +19,7 @@ namespace CMS.Controllers
         private readonly IMapper mapper;
 
         public MovieController(
-            IMovieService movieService, 
+            IMovieService movieService,
             ICinemaService cinemaService,
             ICinemaMovieService cinemaMovieService,
             IMapper mapper)
@@ -121,7 +122,7 @@ namespace CMS.Controllers
 
                 return View(dto);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
@@ -135,13 +136,7 @@ namespace CMS.Controllers
             {
                 var movie = mapper.Map<Movie>(model);
 
-                var cinemaMovie = new CinemaMovie
-                {
-                    CinemaId = model.CinemaId.Value,
-                    MovieId = model.Id
-                };
-
-
+                await movieService.UpdateAsync(movie);
 
                 return RedirectToAction("Index", "Error");
             }
@@ -159,6 +154,68 @@ namespace CMS.Controllers
                 var movie = await movieService.GetByIdAsync(id);
 
                 await movieService.DeleteAsync(movie);
+
+                return RedirectToAction("Index", "Movie");
+            }
+            catch
+            {
+                // TODO: Add proper error page and Log
+                return RedirectToAction("Index", "Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AssignMovie(Guid id)
+        {
+            try
+            {
+                var movie = await movieService.GetByIdAsync(id);
+                var cinemas = await cinemaService.GetAllAsync();
+
+                var dto = new CinemaMovieViewModel
+                {
+                    MovieId = movie.Id,
+                    MovieName = movie.Name
+                };
+
+                foreach (var cinema in cinemas)
+                {
+                    dto.CinemaList.Add(cinema, false);
+                }
+
+                return View(dto);
+
+            }
+            catch
+            {
+                // TODO: Add proper error page and Log
+                return RedirectToAction("Index", "Error");
+            }
+        }
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> AssignMovie(CinemaMovieViewModel model)
+        {
+            try
+            {
+                var cinemaIds = new List<Guid>();
+
+                cinemaIds = model.CinemaList
+                    .Where(cinema => cinema.Value)
+                    .Select(cinema => cinema.Key.Id)
+                    .ToList();
+
+                foreach (var cinemaId in cinemaIds)
+                {
+                    var cinemaMovie = new CinemaMovie
+                    {
+                        MovieId = model.MovieId,
+                        CinemaId = cinemaId
+                    };
+
+                    await cinemaMovieService.CreateAsync(cinemaMovie);
+                }
 
                 return RedirectToAction("Index", "Movie");
             }

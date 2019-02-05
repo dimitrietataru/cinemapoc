@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿ using AutoMapper;
 using Core.Context;
 using Core.Interfaces;
 using Core.Services;
@@ -20,6 +20,7 @@ namespace CMS
 
             services.AddScoped<ICinemaService, CinemaService>();
             services.AddScoped<IMovieService, MovieService>();
+            services.AddScoped<ICinemaMovieService, CinemaMovieService>();
         }
     }
 }
