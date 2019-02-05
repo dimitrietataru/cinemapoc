@@ -1,8 +1,9 @@
-﻿@model CMS.Models.PagerViewModel<CMS.Models.Cinema.CinemaIndexViewModel>
+﻿@model CMS.Models.PagedViewModel<CMS.Models.Cinema.CinemaIndexViewModel>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PagedList.Core.Mvc
 @{
-    ViewData["Title"] = "Cinemas";
+    ViewData["Title"] = $"Cinemas ({Model.Count})";
+    var orderArrow = "glyphicon glyphicon-arrow-" + (Model.IsAsc ? "up" : "down");
 }
 
 <div class="col-lg-12 col-md-12">
@@ -16,33 +17,34 @@
                     </a>
                 </span>
             </h3>
+            @using (Html.BeginForm("Index", "Cinema", FormMethod.Get))
+            {
+                <div class="form-inline">
+                    <input type="hidden" asp-for="OrderBy" class="form-control" />
+                    <input type="hidden" asp-for="IsAsc" class="form-control" />
+
+                    <input asp-for="Filter" class="form-control" />
+                    <input class="btn btn-default" type="submit" value="Search">
+                    <input asp-for="IsExact" class="form-control" title="Exact filter matching!" />
+                </div>
+            }
         </div>
         <div class="panel-body panel-body-responsive">
             <table class="table">
                 <thead>
                     <tr>
                         <th class="col-lg-2 col-md-2">
-                            @Html.ActionLink("Name", "Index", new { page = Model.Pager.page, size = Model.Pager.size, orderBy = "Name", order = !Model.Pager.order }, "Name".Equals(Model.Pager.orderBy) ? new { @style = "color:black" } : null)
-
-                            @if ("Name".Equals(Model.Pager.orderBy) && Model.Pager.order)
+                            @Html.ActionLink("Name", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Name"), ("isAsc", !Model.IsAsc) }))
+                            @if ("Name".Equals(Model.OrderBy))
                             {
-                                <i class="glyphicon glyphicon-arrow-up"></i>
-                            }
-                            else if ("Name".Equals(Model.Pager.orderBy) && !Model.Pager.order)
-                            {
-                                <i class="glyphicon glyphicon-arrow-down"></i>
+                                <i class="@orderArrow"></i>
                             }
                         </th>
                         <th class="col-lg-2 col-md-2">
-                            @Html.ActionLink("Location", "Index", new { page = Model.Pager.page, size = Model.Pager.size, orderBy = "Location", order = !Model.Pager.order }, "Location".Equals(Model.Pager.orderBy) ? new { @style = "color:black" } : null)
-
-                            @if ("Location".Equals(Model.Pager.orderBy) && Model.Pager.order)
+                            @Html.ActionLink("Location", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Location"), ("isAsc", !Model.IsAsc) }))
+                            @if ("Location".Equals(Model.OrderBy))
                             {
-                                <i class="glyphicon glyphicon-arrow-up"></i>
-                            }
-                            else if ("Location".Equals(Model.Pager.orderBy) && !Model.Pager.order)
-                            {
-                                <i class="glyphicon glyphicon-arrow-down"></i>
+                                <i class="@orderArrow"></i>
                             }
                         </th>
                         <th class="col-lg-2 col-md-2">
@@ -90,9 +92,30 @@
             </table>
         </div>
         <div class="panel-footer text-center">
-            <pager list="@Model" asp-controller="Cinema" asp-action="Index" />
-            @*@Html.ActionLink("<<<", "Index", new { page = Model.Pager.page - 1, size = Model.Pager.size, orderBy = Model.Pager.orderBy, order = Model.Pager.order })
-            @Html.ActionLink(">>>", "Index", new { page = Model.Pager.page + 1, size = Model.Pager.size, orderBy = Model.Pager.orderBy, order = Model.Pager.order })*@
+            <pager list="@Model" asp-controller="Cinema" asp-action="Index" asp-all-route-data="@BuildPagerRoute()" />
         </div>
     </div>
 </div>
+
+@{
+    IDictionary<string, string> BuildPagerRoute(List<(string, object)> exceptions = null)
+    {
+        var route = new Dictionary<string, string>
+        {
+            { "size", Model.Size.ToString() },
+            { "orderBy", Model.OrderBy.ToString() },
+            { "isAsc", Model.IsAsc.ToString() },
+            { "filter", Model.Filter?.ToString() ?? "" },
+            { "isExact", Model.IsExact.ToString() }
+        };
+
+        if (exceptions is null)
+        {
+            return route;
+        }
+
+        exceptions.ForEach(r => route[r.Item1] = r.Item2.ToString());
+
+        return route;
+    }
+}

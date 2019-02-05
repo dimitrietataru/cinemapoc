@@ -1,203 +1,139 @@
-﻿@model CMS.Models.Movie.MovieIndexViewModel
+﻿@model CMS.Models.PagedViewModel<CMS.Models.Movie.MovieIndexViewModel>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PagedList.Core.Mvc
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = $"Movies ({Model.Count})";
+    var orderArrow = "glyphicon glyphicon-arrow-" + (Model.IsAsc ? "up" : "down");
 }
 
-<style>
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-</style>
+<div class="col-lg-12 col-md-12">
+    <div class="panel panel-default mt-40">
+        <div class="panel-heading">
+            <h3>
+                MOVIES
+                <span class="btn-group pull-right">
+                    <a asp-action="Create" title="Create" class="btn btn-default">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                    </a>
+                </span>
+            </h3>
+            @using (Html.BeginForm("Index", "Movie", FormMethod.Get))
+            {
+                <div class="form-inline">
+                    <input type="hidden" asp-for="OrderBy" class="form-control" />
+                    <input type="hidden" asp-for="IsAsc" class="form-control" />
 
-<h2>Movies</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-<p>
-    <h3>Total Movies: @Model.TotalCount</h3>
-</p>
-@using (Html.BeginForm("Index", "Movie", new { page = Model.PageNumber, orderBy = Model.OrderBy, orderDesc = Model.OrderDesc, matchString = Model.MatchString }, FormMethod.Get))
-{
-    <div class="form-inline">
-        @Html.TextBoxFor(model => model.MatchString, new { @class = "form-control" })
-        <input class="btn btn-default" type="submit" value="Search">
+                    <input asp-for="Filter" class="form-control" />
+                    <input class="btn btn-default" type="submit" value="Search">
+                    <input asp-for="IsExact" class="form-control" title="Exact filter matching!" />
+                </div>
+            }
+        </div>
+        <div class="panel-body panel-body-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-lg-2 col-md-2">
+                            @Html.ActionLink("Name", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Name"), ("isAsc", !Model.IsAsc) }))
+                            @if ("Name".Equals(Model.OrderBy))
+                            {
+                                <i class="@orderArrow"></i>
+                            }
+                        </th>
+                        <th class="col-lg-1 col-md-1">
+                            @Html.ActionLink("Duration", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Duration"), ("isAsc", !Model.IsAsc) }))
+                            @if ("Duration".Equals(Model.OrderBy))
+                            {
+                                <i class="@orderArrow"></i>
+                            }
+                        </th>
+                        <th class="col-lg-2 col-md-2">
+                            @Html.ActionLink("Studio", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Studio"), ("isAsc", !Model.IsAsc) }))
+                            @if ("Studio".Equals(Model.OrderBy))
+                            {
+                                <i class="@orderArrow"></i>
+                            }
+                        </th>
+                        <th class="col-lg-2 col-md-2">
+                            @Html.ActionLink("Start date", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "StartDate"), ("isAsc", !Model.IsAsc) }))
+                            @if ("StartDate".Equals(Model.OrderBy))
+                            {
+                                <i class="@orderArrow"></i>
+                            }
+                        </th>
+                        <th class="col-lg-2 col-md-2">
+                            @Html.ActionLink("End date", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "EndDate"), ("isAsc", !Model.IsAsc) }))
+                            @if ("EndDate".Equals(Model.OrderBy))
+                            {
+                                <i class="@orderArrow"></i>
+                            }
+                        </th>
+                        <th class="col-lg-3 col-md-3">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Duration)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Studio)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <a href="@Url.Action("Details", "Movie", new { id = item.Id })" title="Details" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                    <a href="@Url.Action("Edit", "Movie", new { id = item.Id })" title="Edit" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                    <a href="@Url.Action("Delete", "Movie", new { id = item.Id })" title="Delete" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer text-center">
+            <pager list="@Model" asp-controller="Movie" asp-action="Index" asp-all-route-data="@BuildPagerRoute()" />
+        </div>
     </div>
-}
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.ActionLink("Name", "Index", new { page = Model.PageNumber, orderBy = "Name", orderDesc = !Model.OrderDesc, matchString = Model.MatchString }, new { @style = "color: black;" })
-
-                @if (Model.OrderDesc && "Name".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-down"></i>
-                }
-                else if (!Model.OrderDesc && "Name".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-up"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("Description", "Index", new { page = Model.PageNumber, orderBy = "Description", orderDesc = !Model.OrderDesc, matchString = Model.MatchString }, new { @style = "color: black;" })
-
-                @if (Model.OrderDesc && "Description".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-down"></i>
-                }
-                else if (!Model.OrderDesc && "Description".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-up"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("Duration", "Index", new { page = Model.PageNumber, orderBy = "Duration", orderDesc = !Model.OrderDesc, matchString = Model.MatchString }, new { @style = "color: black;" })
-
-                @if (Model.OrderDesc && "Duration".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-down"></i>
-                }
-                else if (!Model.OrderDesc && "Duration".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-up"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("Actors", "Index", new { page = Model.PageNumber, orderBy = "Actors", orderDesc = !Model.OrderDesc, matchString = Model.MatchString }, new { @style = "color: black;" })
-
-                @if (Model.OrderDesc && "Actors".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-down"></i>
-                }
-                else if (!Model.OrderDesc && "Actors".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-up"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("Studio", "Index", new { page = Model.PageNumber, orderBy = "Studio", orderDesc = !Model.OrderDesc, matchString = Model.MatchString }, new { @style = "color: black;" })
-
-                @if (Model.OrderDesc && "Studio".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-down"></i>
-                }
-                else if (!Model.OrderDesc && "Studio".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-up"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("ProjectionType", "Index", new { page = Model.PageNumber, orderBy = "ProjectionType", orderDesc = !Model.OrderDesc, matchString = Model.MatchString }, new { @style = "color: black;" })
-
-                @if (Model.OrderDesc && "ProjectionType".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-down"></i>
-                }
-                else if (!Model.OrderDesc && "ProjectionType".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-up"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("Rating", "Index", new { page = Model.PageNumber, orderBy = "Rating", orderDesc = !Model.OrderDesc, matchString = Model.MatchString }, new { @style = "color: black;" })
-
-                @if (Model.OrderDesc && "Rating".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-down"></i>
-                }
-                else if (!Model.OrderDesc && "Rating".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-up"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("Genre", "Index", new { page = Model.PageNumber, orderBy = "Genre", orderDesc = !Model.OrderDesc, matchString = Model.MatchString }, new { @style = "color: black;" })
-
-                @if (Model.OrderDesc && "Genre".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-down"></i>
-                }
-                else if (!Model.OrderDesc && "Genre".Equals(Model.OrderBy))
-                {
-                    <i class="glyphicon glyphicon-arrow-up"></i>
-                }
-            </th>
-            <th>
-                Trailer Url
-            </th>
-            <th>
-                Poster Url
-            </th>
-            <th>
-                Imbd Url
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                End Date
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+@{
+    IDictionary<string, string> BuildPagerRoute(List<(string, object)> exceptions = null)
+    {
+        var route = new Dictionary<string, string>
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Duration)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Actors)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Studio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProjectionType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Genre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TrailerUrl)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PosterUrl)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImbdUrl)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            { "size", Model.Size.ToString() },
+            { "orderBy", Model.OrderBy.ToString() },
+            { "isAsc", Model.IsAsc.ToString() },
+            { "filter", Model.Filter?.ToString() ?? "" },
+            { "isExact", Model.IsExact.ToString() }
+        };
 
-<pager list="@Model" asp-controller="Movie" asp-action="Index" />
+        if (exceptions is null)
+        {
+            return route;
+        }
+
+        exceptions.ForEach(r => route[r.Item1] = r.Item2.ToString());
+
+        return route;
+    }
+}

@@ -1,22 +1,15 @@
-﻿using Movies = Core.Models;
-using System.Collections.Generic;
-using CMS.Utils.PagedListPlus;
+﻿using System;
 
 namespace CMS.Models.Movie
 {
-    public class MovieIndexViewModel : CustomPager<Movies.Movie>
+    public class MovieIndexViewModel
     {
-        public MovieIndexViewModel(
-            IEnumerable<Movies.Movie> items,
-            int page, int pageSize, int totalCount)
-            : base(items, page, pageSize, totalCount)
-        {
-            TotalCount = totalCount;
-        }
+        public Guid Id { get; set; }
 
-        public string OrderBy { get; set; }
-        public bool OrderDesc { get; set; }
-        public int TotalCount { get; set; }
-        public string MatchString { get; set; }
+        public string Name { get; set; }
+        public int Duration { get; set; }
+        public string Studio { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

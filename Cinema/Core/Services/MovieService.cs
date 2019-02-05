@@ -15,23 +15,73 @@ namespace Core.Services
         {
         }
 
-        public async Task<List<Movie>> GetPagedAsync(int page, string orderBy, bool orderDesc, string matchString = null)
+        public IQueryable<Movie> GetPagedQuery(string orderBy, bool order, string filter, bool isExact)
         {
-            var query = context
-                    .Movies
-                    .AsNoTracking();
+            var query = GetBaseQuery();
 
-            if (!string.IsNullOrEmpty(matchString))
+            if (!string.IsNullOrWhiteSpace(filter) && isExact)
             {
-                 query = query.Where(movie => matchString.Equals(movie.Name));
+                query = query.Where(movie => movie.Name.Equals(filter) || movie.Studio.Equals(filter));
+            }
+            else if (!string.IsNullOrWhiteSpace(filter) && !isExact)
+            {
+                filter = filter.ToLower();
+                query = query
+                    .Where(movie =>
+                        movie.Name.ToLower().Contains(filter)
+                        || movie.Studio.ToLower().Contains(filter));
             }
 
+            switch (orderBy)
+            {
+                case "Name" when order is true:
+                    query = query.OrderBy(movie => movie.Name);
+                    break;
+                case "Name" when order is false:
+                    query = query.OrderByDescending(movie => movie.Name);
+                    break;
+                case "Duration" when order is true:
+                    query = query.OrderBy(movie => movie.Duration);
+                    break;
+                case "Duration" when order is false:
+                    query = query.OrderByDescending(movie => movie.Duration);
+                    break;
+                case "Studio" when order is true:
+                    query = query.OrderBy(movie => movie.Studio);
+                    break;
+                case "Studio" when order is false:
+                    query = query.OrderByDescending(movie => movie.Studio);
+                    break;
+                case "StartDate" when order is true:
+                    query = query.OrderBy(movie => movie.StartDate);
+                    break;
+                case "StartDate" when order is false:
+                    query = query.OrderByDescending(movie => movie.StartDate);
+                    break;
+                case "EndDate" when order is true:
+                    query = query.OrderBy(movie => movie.EndDate);
+                    break;
+                case "EndDate" when order is false:
+                    query = query.OrderByDescending(movie => movie.EndDate);
+                    break;
+                default:
+                    break;
+            }
+
+            return query;
+        }
+
+        public async Task<List<Movie>> GetPagedAsync(IQueryable<Movie> query, int page, int size)
+        {
             return await query
-                    .Skip((page - 1) * 10)
-                    .Take(10)
-                    .OrderBy(cinema => orderDesc ? cinema.GetType().GetProperty(orderBy).GetValue(cinema, null) : null)
-                    .OrderByDescending(cinema => !orderDesc ? cinema.GetType().GetProperty(orderBy).GetValue(cinema, null) : null)
-               .ToListAsync();
+                .Skip(page * size)
+                .Take(size)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetPagedCountAsync(IQueryable<Movie> pagedQuery)
+        {
+            return await pagedQuery.CountAsync();
         }
     }
 }

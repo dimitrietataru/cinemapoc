@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Testing.CinemaTest
+namespace Testing.CinemaTests
 {
     [Trait("Category", ". Cinema Controller")]
     public class CinemaControllerTest
@@ -58,7 +58,7 @@ namespace Testing.CinemaTest
             Assert.True(result != null);
             Assert.True(result is IActionResult);
             Assert.True(result.Model != null);
-            var resultModel = Assert.IsType<PagerViewModel<CinemaIndexViewModel>>(result.Model);
+            var resultModel = Assert.IsType<PagedViewModel<CinemaIndexViewModel>>(result.Model);
             Assert.Same(viewModels, resultModel.Items);
         }
 
@@ -89,7 +89,7 @@ namespace Testing.CinemaTest
             Assert.True(result != null);
             Assert.True(result is IActionResult);
             Assert.True(result.Model != null);
-            var resultModel = Assert.IsType<PagerViewModel<CinemaIndexViewModel>>(result.Model);
+            var resultModel = Assert.IsType<PagedViewModel<CinemaIndexViewModel>>(result.Model);
             Assert.Same(viewModels, resultModel.Items);
         }
 
