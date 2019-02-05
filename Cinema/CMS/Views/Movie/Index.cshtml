@@ -25,7 +25,7 @@
 
                     <input asp-for="Filter" class="form-control" />
                     <input class="btn btn-default" type="submit" value="Search">
-                    <input asp-for="IsExact" class="form-control" title="Exact filter matching!" />
+                    <input asp-for="IsExact" title="Exact filter matching!" />
                 </div>
             }
         </div>
@@ -93,6 +93,9 @@
                             </td>
                             <td>
                                 <div class="btn-group pull-right">
+                                    <a href="@Url.Action("AssignMovie", "Movie", new { id = item.Id })" title="Assign Movie to Cinema" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-facetime-video"></span>
+                                    </a>
                                     <a href="@Url.Action("Details", "Movie", new { id = item.Id })" title="Details" class="btn btn-default">
                                         <span class="glyphicon glyphicon-eye-open"></span>
                                     </a>

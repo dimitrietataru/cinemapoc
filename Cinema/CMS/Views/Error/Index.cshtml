@@ -1,0 +1,23 @@
+﻿@{ 
+    ViewData["Title"] = "Error";
+}
+
+<style>
+    body {
+        background-color: ActiveCaption;
+    }
+</style>
+
+<div style="padding: 5em;" class="col-md-12">
+    <div id="inner-panel" style="padding: 1em;" class="panel">
+        <div calss="panel-body">
+            <img style="width: 200px; height: 200px;" alt="error" src="~/images/errorImage.png" />
+            <h3>
+                <font face="verdana">Oops, something went wrong...</font>
+            </h3>
+            <h4>
+                <font face="verdana">Maybe the page you are looking for is missing. Please try again or <a href="@Url.Action("Index", "Home")">go to home page.</a></font>
+            </h4>
+        </div>
+    </div>
+</div>

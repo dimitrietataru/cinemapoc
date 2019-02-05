@@ -18,6 +18,8 @@ namespace Testing.MovieTests
     {
         private readonly ModelFaker modelFaker;
         private readonly Mock<IMovieService> mockMovieService;
+        private readonly Mock<ICinemaService> mockCinemaService;
+        private readonly Mock<ICinemaMovieService> mockCinemaMovieService;
         private readonly Mock<IMapper> mockMapper;
         private readonly MovieController controllerUnderTest;
 
@@ -25,9 +27,13 @@ namespace Testing.MovieTests
         {
             modelFaker = new ModelFaker();
             mockMovieService = new Mock<IMovieService>();
+            mockCinemaService = new Mock<ICinemaService>();
+            mockCinemaMovieService = new Mock<ICinemaMovieService>();
             mockMapper = new Mock<IMapper>();
             controllerUnderTest = new MovieController(
                 mockMovieService.Object,
+                mockCinemaService.Object,
+                mockCinemaMovieService.Object,
                 mockMapper.Object);
         }
 
@@ -114,6 +120,34 @@ namespace Testing.MovieTests
             Assert.True(result is IActionResult);
             Assert.Equal("Index", result.ActionName);
             Assert.Equal("Home", result.ControllerName);
+        }
+
+        [Trait("Category", "Details")]
+        [Fact(DisplayName = "MovieController/Details -> movie")]
+        internal async void GivenDetailsCalledWhenMovieExistsThenReturnsMovie()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestMovie();
+            var viewModel = modelFaker.GetTestMovieDetails();
+            mockMovieService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync(dbModel);
+            mockMapper
+                .Setup(_ => _.Map<MovieDetailsViewModel>(dbModel))
+                .Returns(viewModel);
+
+            // Act
+            var response = await controllerUnderTest.Details(default);
+
+            // Assert
+            mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<MovieDetailsViewModel>(dbModel), Times.Once());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is MovieDetailsViewModel);
+            Assert.Same(viewModel, result.Model);
         }
     }
 }

@@ -1,0 +1,48 @@
+﻿@model CMS.Models.Movie.CinemaMovieViewModel
+
+@{
+    ViewData["Title"] = "AssignMovie";
+}
+<div class="col-lg-12 col-md-12">
+    <form asp-action="AssignMovie">
+        @Html.HiddenFor(model => model.MovieId)
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="panel panel-default mt-40">
+            <div class="panel-heading">
+                <h3>
+                    <span>Choose Cinema for <span style="color:red;">@Model.MovieName</span> </span>
+                    <span class="pull-right">
+                        <a href="@Url.Action("Details", "Movie", new { id = Model.MovieId })" title="Details" class="btn btn-default">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
+                        <a href="@Url.Action("Edit", "Movie", new { id = Model.MovieId })" title="Edit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                    </span>
+                </h3>
+            </div>
+            <div class="panel-body" style="height:300px; overflow: auto;">
+                @for (var i = 0; i < Model.CinemaList.Count(); i++)
+                {
+                    <div class="col-sm-12 Items @String.Format("CinemaList{0}", i)">
+                        <div class="checkbox">
+                            @{var item = Model.CinemaList.ElementAt(i);}
+                            @Html.Hidden(string.Format("CinemaList[{0}].Key.Id", i), item.Key.Id)
+                            @Html.Hidden(string.Format("CinemaList[{0}].Key.Name", i), item.Key.Name)
+                            @Html.CheckBox("CinemaList[" + i + "].Value", item.Value)
+                            @Html.Label("CinemaList[" + i + "].Value", item.Key.Name)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
