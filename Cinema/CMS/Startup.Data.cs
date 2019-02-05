@@ -20,6 +20,7 @@ namespace CMS
 
             services.AddScoped<ICinemaService, CinemaService>();
             services.AddScoped<IMovieService, MovieService>();
-        }
+			services.AddScoped<IAuditoriumService, AuditoriumService>();
+		}
     }
 }

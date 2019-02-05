@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CMS.Models.Auditorium;
 using CMS.Models.Cinema;
 using CMS.Models.Movie;
 using Core.Models;
@@ -21,6 +22,24 @@ namespace CMS.Mapping
 
         private void MapAuditoriumModels()
         {
+			CreateMap<Auditorium, AuditoriumIndexViewModel>();
+			CreateMap<Auditorium, AuditoriumDetailsViewModel>()
+				.ForMember(dest => dest.Seats, opt => opt
+					.MapFrom(src => JsonConvert.DeserializeObject<List<Seat>>(src.Seats)));
+			CreateMap<Auditorium, AuditoriumCreateViewModel>()
+				.ReverseMap()
+				.ForMember(dest => dest.Seats, opt => opt
+					.MapFrom(src => JsonConvert.SerializeObject(src.Seats)))
+				.IgnoreAllPropertiesWithAnInaccessibleSetter();
+			CreateMap<Auditorium, AuditoriumEditViewModel>()
+				.ForMember(dest => dest.Seats, opt => opt
+					.MapFrom(src => JsonConvert.DeserializeObject<List<Seat>>(src.Seats)))
+				.IgnoreAllPropertiesWithAnInaccessibleSetter();
+			CreateMap<AuditoriumEditViewModel, Auditorium>()
+				.ForMember(dest => dest.Seats, opt => opt
+					.MapFrom(src => JsonConvert.SerializeObject(src.Seats)))
+				.IgnoreAllPropertiesWithAnInaccessibleSetter();
+			CreateMap<Auditorium, AuditoriumDeleteViewModel>();
         }
 
         private void MapBookingModels()

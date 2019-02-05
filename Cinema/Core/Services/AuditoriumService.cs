@@ -50,16 +50,23 @@ namespace Core.Services
 				.ToListAsync();
 		}
 
-		public IQueryable<Auditorium> GetPagedQuery(string orderBy, bool order)
+		public IQueryable<Auditorium> GetPagedQuery(string orderBy, bool order, string filter, bool isExact)
 		{
 			var query = GetBaseQuery();
 
-			////string filter = "";
-			////query = query.Where(cinema =>
-			////    cinema.Name.Contains(filter)
-			////    || cinema.Address.Contains(filter)
-			////    || cinema.Contact.Contains(filter)
-			////    || cinema.Location.Contains(filter));
+			if (!string.IsNullOrWhiteSpace(filter) && isExact)
+			{
+				query = query
+					.Where(auditorium =>
+						auditorium.Name.Equals(filter));
+			}
+			else if (!string.IsNullOrWhiteSpace(filter) && !isExact)
+			{
+				filter = filter.ToLower();
+				query = query
+					.Where(auditorium =>
+						auditorium.Name.ToLower().Contains(filter));
+			}
 
 			switch (orderBy)
 			{

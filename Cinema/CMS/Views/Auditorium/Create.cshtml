@@ -1,0 +1,79 @@
+﻿@using Core.Models.Enums;
+@model CMS.Models.Auditorium.AuditoriumCreateViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="col-lg-12 col-md-12">
+    <div class="panel panel-default mt-40">
+        <div class="panel-heading">
+            <h4>CREATE AUDITORIUM</h4>
+        </div>
+        <div class="panel-body panel-body-responsive">
+            <div class="col-lg-12 col-md-12 row">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Capacity" class="control-label"></label>
+                        <input asp-for="Capacity" class="form-control" />
+                        <span asp-validation-for="Capacity" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Rows" class="control-label"></label>
+                        <input asp-for="Rows" class="form-control" />
+                        <span asp-validation-for="Rows" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Columns" class="control-label"></label>
+                        <input asp-for="Columns" class="form-control" />
+                        <span asp-validation-for="Columns" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <select asp-for="Status"
+                                asp-items="Html.GetEnumSelectList<AuditoriumStatus>()" class="form-control"></select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SeatType" class="control-label"></label>
+                        <select asp-for="SeatType"
+                                asp-items="Html.GetEnumSelectList<AuditoriumSeatType>()" class="form-control"></select>
+                        <span asp-validation-for="SeatType" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ScreenType" class="control-label"></label>
+                        <select asp-for="ScreenType"
+                                asp-items="Html.GetEnumSelectList<AuditoriumScreenType>()" class="form-control"></select>
+                        <span asp-validation-for="ScreenType" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-default" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 btn-group">
+                    <a href="@Url.Action("Index", "Auditorium")" title="Back to list" class="btn btn-default">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </a>
+                    <a href="@Url.Action("Index", "Home")" title="Home" class="btn btn-default">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
