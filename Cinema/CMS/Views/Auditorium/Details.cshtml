@@ -75,25 +75,25 @@
                 <hr />
                 <div class="col-lg-12 col-md-12">
                     <table class="table table-bordered table-striped">
-                        @for (int i = 0; i < Model.Rows; i++)
+                        @for (int i = -2; i < Model.Rows; i++)
                         {
                             <tr>
-                                @for (int j = 0; j < Model.Columns; j++)
+                                @for (int j = -2; j < Model.Columns; j++)
                                 {
-                                    if (i == 0)
+                                    if (i == -2)
                                     {
-                                        if (j == 0)
+                                        if (j == -2)
                                         {
                                             <th></th>
                                         }
                                         else
                                         {
-                                            <th class="text-center">@j</th>
+                                            <th class="text-center">@(j + 2)</th>
                                         }
                                     }
-                                    else if (j == 0)
+                                    else if (j == -2)
                                     {
-                                        char row = (char)(64 + i);
+                                        char row = (char)(66 + i);
                                         <td class="text-right"><b>@row</b></td>
                                     }
                                     else

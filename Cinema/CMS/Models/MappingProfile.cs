@@ -29,8 +29,8 @@ namespace CMS.Mapping
 					.MapFrom(src => JsonConvert.DeserializeObject<List<Seat>>(src.Seats)))
 				.AfterMap((src, dest) =>
 				{
-					dest.Rows = dest.Seats.Select(s => s.Row).Max() + 2;
-					dest.Columns = dest.Seats.Select(s => s.Column).Max() + 2;
+					dest.Rows = dest.Seats.Select(s => s.Row).Max();
+					dest.Columns = dest.Seats.Select(s => s.Column).Max();
 				})
 				.IgnoreAllPropertiesWithAnInaccessibleSetter();
 			CreateMap<Auditorium, AuditoriumCreateViewModel>()
@@ -42,8 +42,8 @@ namespace CMS.Mapping
 					.MapFrom(src => JsonConvert.DeserializeObject<List<Seat>>(src.Seats)))
 				.AfterMap((src, dest) =>
 				{
-					dest.Rows = dest.Seats.Select(s => s.Row).Max() + 2;
-					dest.Columns = dest.Seats.Select(s => s.Column).Max() + 2;
+					dest.Rows = dest.Seats.Select(s => s.Row).Max();
+					dest.Columns = dest.Seats.Select(s => s.Column).Max();
 				})
 				.IgnoreAllPropertiesWithAnInaccessibleSetter();
 			CreateMap<AuditoriumEditViewModel, Auditorium>()
