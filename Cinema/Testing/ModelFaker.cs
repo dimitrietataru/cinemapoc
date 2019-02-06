@@ -159,6 +159,58 @@ namespace Testing
             };
         }
 
+        public MovieCreateViewModel GetTestMovieCreate()
+        {
+            return new MovieCreateViewModel
+            {
+                Name = string.Empty,
+                Description = string.Empty,
+                Duration = default,
+                Actors = default,
+                Studio = default,
+                ProjectionType = ProjectionType.D2D,
+                Rating = MovieRating.G,
+                Genre = default,
+                TrailerUrl = default,
+                PosterUrl = default,
+                ImbdUrl = default,
+                StartDate = default,
+                EndDate = default
+            };
+        }
+
+        public MovieEditViewModel GetTestMovieEdit()
+        {
+            return new MovieEditViewModel
+            {
+                Id = default,
+                Name = string.Empty,
+                Description = string.Empty,
+                Duration = default,
+                Actors = default,
+                Studio = default,
+                ProjectionType = ProjectionType.D2D,
+                Rating = MovieRating.G,
+                Genre = default,
+                TrailerUrl = default,
+                PosterUrl = default,
+                ImbdUrl = default,
+                StartDate = default,
+                EndDate = default
+            };
+        }
+
+        public CinemaMovieViewModel GetTestCinemaMovieViewModel()
+        {
+            return new CinemaMovieViewModel
+            {
+                MovieId = default,
+                MovieName = string.Empty,
+                MovieDescription = string.Empty,
+                CinemaDictionary = GetCinemaDictionary()
+            };
+        }
+
         public List<Movie> GetTestMovies(int count)
         {
             return Enumerable.Repeat(GetTestMovie(), count).ToList();
@@ -167,6 +219,20 @@ namespace Testing
         public List<MovieIndexViewModel> GetTestMovieIndexes(int count)
         {
             return Enumerable.Repeat(GetTestMovieIndex(), count).ToList();
+        }
+
+        public Dictionary<Cinema, bool> GetCinemaDictionary()
+        {
+            var dictionary = new Dictionary<Cinema, bool>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                var cinema = GetTestCinema();
+                cinema.Id = new System.Guid();
+                dictionary.Add(cinema, false);
+            }
+
+            return dictionary;
         }
     }
 }

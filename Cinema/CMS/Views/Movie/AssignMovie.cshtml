@@ -22,15 +22,15 @@
                 </h3>
             </div>
             <div class="panel-body" style="height:300px; overflow: auto;">
-                @for (var i = 0; i < Model.CinemaList.Count(); i++)
+                @for (var i = 0; i < Model.CinemaDictionary.Count(); i++)
                 {
-                    <div class="col-sm-12 Items @String.Format("CinemaList{0}", i)">
+                    <div class="col-sm-12 Items @String.Format("CinemaDictionary{0}", i)">
                         <div class="checkbox">
-                            @{var item = Model.CinemaList.ElementAt(i);}
-                            @Html.Hidden(string.Format("CinemaList[{0}].Key.Id", i), item.Key.Id)
-                            @Html.Hidden(string.Format("CinemaList[{0}].Key.Name", i), item.Key.Name)
-                            @Html.CheckBox("CinemaList[" + i + "].Value", item.Value)
-                            @Html.Label("CinemaList[" + i + "].Value", item.Key.Name)
+                            @{var item = Model.CinemaDictionary.ElementAt(i);}
+                            @Html.Hidden(string.Format("CinemaDictionary[{0}].Key.Id", i), item.Key.Id)
+                            @Html.Hidden(string.Format("CinemaDictionary[{0}].Key.Name", i), item.Key.Name)
+                            @Html.CheckBox("CinemaDictionary[" + i + "].Value", item.Value)
+                            @Html.Label("CinemaDictionary[" + i + "].Value", item.Key.Name)
                         </div>
                     </div>
                 }

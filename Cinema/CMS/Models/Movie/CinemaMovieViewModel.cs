@@ -14,6 +14,6 @@ namespace CMS.Models.Movie
         [DisplayName("Movie Description")]
         public string MovieDescription { get; set; }
 
-        public Dictionary<CoreModels.Cinema, bool> CinemaList { get; set; } = new Dictionary<CoreModels.Cinema, bool>();
+        public Dictionary<CoreModels.Cinema, bool> CinemaDictionary { get; set; } = new Dictionary<CoreModels.Cinema, bool>();
     }
 }

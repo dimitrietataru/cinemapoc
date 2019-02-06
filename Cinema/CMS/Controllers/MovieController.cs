@@ -116,13 +116,9 @@ namespace CMS.Controllers
 
                 var dto = mapper.Map<MovieEditViewModel>(movie);
 
-                var cinemas = await cinemaService.GetAllAsync();
-
-                dto.SetCinemas(cinemas);
-
                 return View(dto);
             }
-            catch (Exception ex)
+            catch
             {
                 // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
@@ -180,7 +176,7 @@ namespace CMS.Controllers
 
                 foreach (var cinema in cinemas)
                 {
-                    dto.CinemaList.Add(cinema, false);
+                    dto.CinemaDictionary.Add(cinema, false);
                 }
 
                 return View(dto);
@@ -201,7 +197,7 @@ namespace CMS.Controllers
             {
                 var cinemaIds = new List<Guid>();
 
-                cinemaIds = model.CinemaList
+                cinemaIds = model.CinemaDictionary
                     .Where(cinema => cinema.Value)
                     .Select(cinema => cinema.Key.Id)
                     .ToList();

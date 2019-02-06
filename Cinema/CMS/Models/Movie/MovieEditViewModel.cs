@@ -1,11 +1,7 @@
 ﻿using Core.Models.Enums;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using CoreModels = Core.Models;
 
 namespace CMS.Models.Movie
 {
@@ -66,20 +62,5 @@ namespace CMS.Models.Movie
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "End Date is required")]
         public DateTime EndDate { get; set; }
-
-        public List<SelectListItem> CinemasList { get; set; } = new List<SelectListItem>();
-
-        public void SetCinemas(List<CoreModels.Cinema> cinemas) 
-        {
-            cinemas.ForEach(cinema =>
-            {
-                CinemasList.Add(
-                    new SelectListItem
-                    {
-                        Text = cinema.Name,
-                        Value = cinema.Id.ToString()
-                    });
-            });
-        }
     }
 }
