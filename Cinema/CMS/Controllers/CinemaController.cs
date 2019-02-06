@@ -164,23 +164,5 @@ namespace CMS.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
-        public async Task CreateCinemas()
-        {
-            for (int i = 0; i < 30; i++)
-            {
-                var cinema = new Cinema
-                {
-                    Name = i + "Cinema",
-                    Description = "description",
-                    Location = "location",
-                    Address = "address",
-                    Contact = "contact",
-                    Schedule = "test schelude"
-                };
-
-                await cinemaService.CreateAsync(cinema);
-            }
-        }
     }
 }

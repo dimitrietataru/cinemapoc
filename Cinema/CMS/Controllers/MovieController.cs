@@ -221,30 +221,6 @@ namespace CMS.Controllers
                 return RedirectToAction("Index", "Error");
             }
         }
-
-        public async Task CreateMovies()
-        {
-            for (int i = 0; i < 25; i++)
-            {
-                var movie = new Movie
-                {
-                    Name = i + "Movie",
-                    Description = "descrip",
-                    Duration = i * 5,
-                    Actors = "Bruce lee",
-                    Studio = "Marvel",
-                    ProjectionType = Core.Models.Enums.ProjectionType.D2D,
-                    Rating = Core.Models.Enums.MovieRating.G,
-                    Genre = "horor",
-                    TrailerUrl = "",
-                    PosterUrl = "",
-                    ImbdUrl = "",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now
-                };
-
-                await movieService.CreateAsync(movie);
-            }
-        }
     }
 }
+
