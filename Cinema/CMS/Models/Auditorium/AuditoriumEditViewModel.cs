@@ -22,6 +22,14 @@ namespace CMS.Models.Auditorium
 		[DisplayName("Capacity")]
 		public int Capacity { get; set; }
 
+		[Required(ErrorMessage = "Rows is required")]
+		[DisplayName("Rows")]
+		public int Rows { get; set; }
+
+		[Required(ErrorMessage = "Columns is required")]
+		[DisplayName("Columns")]
+		public int Columns { get; set; }
+
 		[DisplayName("Status")]
 		public AuditoriumStatus Status { get; set; }
 

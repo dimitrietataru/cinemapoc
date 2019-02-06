@@ -4,13 +4,6 @@
 @{
     ViewData["Title"] = "Edit";
 }
-<style>
-    .square {
-        height: 10px;
-        width: 10px;
-        background-color: #555;
-    }
-</style>
 
 <div class="col-lg-12 col-md-12">
     <div class="panel panel-default mt-40">
@@ -21,53 +14,46 @@
             <div class="col-lg-12 col-md-12 row">
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label asp-for="Name" class="control-label"></label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="row">
-                        <label asp-for="Cinema" class="control-label col-md-12"></label>
-                        <div class="col-md-8">
-                            <div class="form-control">
-                                @Html.DisplayFor(model => model.Cinema.Name)
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <a href="@Url.Action("Details", "Cinema", new { id = Model.Cinema.Id })" title="Details" class="btn btn-default pull-right">
-                                Details
-                                <span class="glyphicon glyphicon-info-sign"></span>
-                            </a>
-                        </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label asp-for="Cinema" class="control-label"></label>
+                        <a href="@Url.Action("Details", "Cinema", new { id = Model.Cinema.Id })" target="_blank" title="Details" class="btn btn-default col-lg-12 col-md-12">
+                            @Model.Cinema.Name
+                            <span class="glyphicon glyphicon-info-sign pull-right"></span>
+                        </a>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label asp-for="Capacity" class="control-label"></label>
                         <input asp-for="Capacity" class="form-control" />
                         <span asp-validation-for="Capacity" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label asp-for="Status" class="control-label"></label>
                         <select asp-for="Status"
                                 asp-items="Html.GetEnumSelectList<AuditoriumStatus>()" class="form-control"></select>
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label asp-for="SeatType" class="control-label"></label>
                         <select asp-for="SeatType"
                                 asp-items="Html.GetEnumSelectList<AuditoriumSeatType>()" class="form-control"></select>
                         <span asp-validation-for="SeatType" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label asp-for="ScreenType" class="control-label"></label>
                         <select asp-for="ScreenType"
                                 asp-items="Html.GetEnumSelectList<AuditoriumScreenType>()" class="form-control"></select>
                         <span asp-validation-for="ScreenType" class="text-danger"></span>
                     </div>
-                    <table class="table table-bordered">
-                        @for (int i = 0; i < Model.Seats.Select(s => s.Row).Max() + 2; i++)
+                    <table class="table table-bordered table-striped">
+                        @for (int i = 0; i < Model.Rows; i++)
                         {
                             <tr>
-                                @for (int j = 0; j < Model.Seats.Select(s => s.Column).Max() + 2; j++)
+                                @for (int j = 0; j < Model.Columns; j++)
                                 {
                                     if (i == 0)
                                     {
@@ -84,10 +70,6 @@
                                     {
                                         char row = (char)(64 + i);
                                         <td class="text-right"><b>@row</b></td>
-                                    }
-                                    else if(j== (Model.Seats.Select(s => s.Column).Max() + 3) / 2)
-                                    {
-                                        <td class="text-center glyphicon-remove-circle" style="color:white;"></td>
                                     }
                                     else
                                     {

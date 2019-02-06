@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CMS.Models;
 using CMS.Models.Auditorium;
+using CMS.Models.Cinema;
 using Core.Interfaces;
 using Core.Models;
 using Core.Models.NoSql;
@@ -59,7 +60,7 @@ namespace CMS.Controllers
 		{
 			try
 			{
-				var auditorium = await auditoriumService.GetByIdAsync(id);
+				var auditorium = await auditoriumService.GetEagerByIdAsync(id);
 				if (auditorium is null)
 				{
 					return NotFound();
@@ -79,7 +80,9 @@ namespace CMS.Controllers
 		public async Task<IActionResult> Create()
 #pragma warning restore CS1998
 		{
-			var dto = new AuditoriumCreateViewModel();
+			var cinemas = await cinemaService.GetAllAsync();
+			var cinemasDetail = mapper.Map <List<CinemaDetailsViewModel>>(cinemas);
+			var dto = new AuditoriumCreateViewModel(cinemasDetail);
 
 			return View(dto);
 		}

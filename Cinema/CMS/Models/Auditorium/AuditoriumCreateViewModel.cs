@@ -1,17 +1,27 @@
 ﻿using Core.Models.Enums;
 using Core.Models.NoSql;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using static System.Linq.Enumerable;
 
 namespace CMS.Models.Auditorium
 {
 	public class AuditoriumCreateViewModel
 	{
-		public Guid CinemaId { get; set; } = Guid.Parse("3659AAB8-4FD8-49BF-418A-08D685E94007");
+		public AuditoriumCreateViewModel()
+		{ }
+
+		public AuditoriumCreateViewModel(List<Cinema.CinemaDetailsViewModel> cinemas)
+		{
+			this.CinemaList = new SelectList(cinemas,
+				nameof(Cinema.CinemaDetailsViewModel.Id),
+				nameof(Cinema.CinemaDetailsViewModel.Name));
+		}
+
+		[DisplayName("Cinema")]
+		public Guid CinemaId { get; set; }
 
 		[Required(ErrorMessage = "Name is required")]
 		[MaxLength(50, ErrorMessage = "Maximum length exceeded (50 characters)")]
@@ -38,6 +48,8 @@ namespace CMS.Models.Auditorium
 
 		[DisplayName("Screen Type")]
 		public AuditoriumScreenType ScreenType { get; set; }
+
+		public SelectList CinemaList { get; set; }
 
 		public List<Seat> Seats { get; set; } = new List<Seat>();
 	}

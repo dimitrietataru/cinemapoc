@@ -41,17 +41,14 @@
                             }
                         </th>
                         <th class="col-lg-2 col-md-2">
-                            @Html.ActionLink("Location", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Location"), ("isAsc", !Model.IsAsc) }))
+                            @Html.ActionLink("Capacity", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Location"), ("isAsc", !Model.IsAsc) }))
                             @if ("Location".Equals(Model.OrderBy))
                             {
                                 <i class="@orderArrow"></i>
                             }
                         </th>
                         <th class="col-lg-2 col-md-2">
-                            Address
-                        </th>
-                        <th class="col-lg-3 col-md-3">
-                            Contact
+                            Status
                         </th>
                         <th class="col-lg-3 col-md-3">
                         </th>
