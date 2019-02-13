@@ -50,8 +50,5 @@ namespace CMS.Models.Movie
 
         [DisplayName("End Date")]
         public DateTime EndDate { get; set; }
-
-        public List<Event> Events { get; set; } = new List<Event>();
-        public List<CinemaMovie> CinemaMovies { get; set; } = new List<CinemaMovie>();
     }
 }

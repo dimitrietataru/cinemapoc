@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Models;
+using CMS.Models.CinemaMovie;
 using CMS.Models.Movie;
 using Core.Interfaces;
 using Core.Models;
@@ -56,12 +57,17 @@ namespace CMS.Controllers
             }
         }
 
-        [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             try
             {
                 var movie = await movieService.GetByIdAsync(id);
+
+                if (movie is null)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+
                 var dto = mapper.Map<MovieDetailsViewModel>(movie);
 
                 return View(dto);
@@ -73,7 +79,6 @@ namespace CMS.Controllers
             }
         }
 
-        [HttpGet]
 #pragma warning disable CS1998
         public async Task<IActionResult> Create()
 #pragma warning restore CS1998
@@ -84,35 +89,37 @@ namespace CMS.Controllers
             }
             catch
             {
-                // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
             }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MovieCreateViewModel model)
         {
             try
             {
                 var movie = mapper.Map<Movie>(model);
-
                 await movieService.CreateAsync(movie);
 
                 return RedirectToAction("Details", "Movie", new { id = movie.Id });
             }
             catch
             {
-                // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
             }
         }
 
-        [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
             try
             {
                 var movie = await movieService.GetByIdAsync(id);
+
+                if (movie is null)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
 
                 var dto = mapper.Map<MovieEditViewModel>(movie);
 
@@ -120,25 +127,23 @@ namespace CMS.Controllers
             }
             catch
             {
-                // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
             }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(MovieEditViewModel model)
         {
             try
             {
                 var movie = mapper.Map<Movie>(model);
-
                 await movieService.UpdateAsync(movie);
 
                 return RedirectToAction("Index", "Error");
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
             }
         }
@@ -149,24 +154,41 @@ namespace CMS.Controllers
             {
                 var movie = await movieService.GetByIdAsync(id);
 
+                if (movie is null)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+
                 await movieService.DeleteAsync(movie);
 
                 return RedirectToAction("Index", "Movie");
             }
             catch
             {
-                // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
             }
         }
 
-        [HttpGet]
         public async Task<IActionResult> AssignMovie(Guid id)
         {
             try
             {
                 var movie = await movieService.GetByIdAsync(id);
+
+                if (movie is null)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+
                 var cinemas = await cinemaService.GetAllAsync();
+                var cinemaMovie = await cinemaMovieService.GetAllByMovieIdAsync(id);
+
+                List<CinemaMovieModel> cinemaMovieDto = cinemas
+                    .Select(x => new CinemaMovieModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList();
 
                 var dto = new CinemaMovieViewModel
                 {
@@ -174,27 +196,28 @@ namespace CMS.Controllers
                     MovieName = movie.Name
                 };
 
-                foreach (var cinema in cinemas)
+                cinemaMovieDto.ForEach(cinema =>
                 {
-                    dto.CinemaDictionary.Add(cinema, false);
-                }
+                    var movieInCinema = cinemaMovie.Find(x => x.CinemaId == cinema.Id);
+                    dto.CinemaDictionary.Add(cinema, movieInCinema != null ? true : false);
+                });
 
                 return View(dto);
 
             }
             catch
             {
-                // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
             }
         }
 
         [HttpPost]
-        [DisableRequestSizeLimit]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignMovie(CinemaMovieViewModel model)
         {
             try
             {
+                var existingCinemaMovie = await cinemaMovieService.GetAllByMovieIdAsync(model.MovieId);
                 var cinemaIds = new List<Guid>();
 
                 cinemaIds = model.CinemaDictionary
@@ -202,22 +225,73 @@ namespace CMS.Controllers
                     .Select(cinema => cinema.Key.Id)
                     .ToList();
 
-                foreach (var cinemaId in cinemaIds)
+                #region Delete
+                if (!cinemaIds.Any())
                 {
-                    var cinemaMovie = new CinemaMovie
+                    foreach (var cinema in existingCinemaMovie)
+                    {
+                        await cinemaMovieService.Delete(cinema);
+                    }
+
+                    return RedirectToAction("Index", "Movie");
+                }
+                #endregion
+                #region Update
+                if (existingCinemaMovie.Any())
+                {
+                    var addedCinemasToExistentMovie = cinemaIds
+                        .Except(existingCinemaMovie
+                        .Select(cm => cm.CinemaId))
+                        .ToList();
+
+                    if (addedCinemasToExistentMovie.Any())
+                    {
+                        var addCinemaMovie = addedCinemasToExistentMovie
+                            .Select(cinemaId => new CinemaMovie
+                            {
+                                MovieId = model.MovieId,
+                                CinemaId = cinemaId
+                            }).ToList();
+
+                        await cinemaMovieService.CreateAsync(addCinemaMovie);
+                    }
+                    else
+                    {
+                        var removedCinemasToExistentMovide = existingCinemaMovie
+                            .Select(x => x.CinemaId)
+                            .Except(cinemaIds)
+                            .ToList();
+
+                        var movieCinemaToBeDeleted = removedCinemasToExistentMovide
+                            .Select(cinemaId => new CinemaMovie
+                            {
+                                MovieId = model.MovieId,
+                                CinemaId = cinemaId
+                            }).ToList();
+
+                        await cinemaMovieService.Delete(movieCinemaToBeDeleted);
+
+                    }
+
+                    return RedirectToAction("Index", "Movie");
+                }
+                #endregion
+                #region Create
+                else
+                {
+                    var newCinemas = cinemaIds.Select(cinemaId => new CinemaMovie
                     {
                         MovieId = model.MovieId,
                         CinemaId = cinemaId
-                    };
+                    }).ToList();
 
-                    await cinemaMovieService.CreateAsync(cinemaMovie);
+                    await cinemaMovieService.CreateAsync(newCinemas);
+                    return RedirectToAction("Index", "Movie");
                 }
-
-                return RedirectToAction("Index", "Movie");
+                #endregion
             }
             catch
             {
-                // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Error");
             }
         }

@@ -1,4 +1,5 @@
 ﻿using CMS.Models.Cinema;
+using CMS.Models.CinemaMovie;
 using CMS.Models.Movie;
 using Core.Models;
 using Core.Models.Enums;
@@ -200,6 +201,15 @@ namespace Testing
             };
         }
 
+        public CinemaMovieModel GetTestCinemaMovieModel()
+        {
+            return new CinemaMovieModel
+            {
+                Id = default,
+                Name = string.Empty
+            };
+        }
+
         public CinemaMovieViewModel GetTestCinemaMovieViewModel()
         {
             return new CinemaMovieViewModel
@@ -221,15 +231,15 @@ namespace Testing
             return Enumerable.Repeat(GetTestMovieIndex(), count).ToList();
         }
 
-        public Dictionary<Cinema, bool> GetCinemaDictionary()
+        public Dictionary<CinemaMovieModel, bool> GetCinemaDictionary()
         {
-            var dictionary = new Dictionary<Cinema, bool>();
+            var dictionary = new Dictionary<CinemaMovieModel, bool>();
 
             for (int i = 0; i < 10; i++)
             {
-                var cinema = GetTestCinema();
-                cinema.Id = new System.Guid();
-                dictionary.Add(cinema, false);
+                var cinemaMovieModel = GetTestCinemaMovieModel();
+                cinemaMovieModel.Id = new System.Guid();
+                dictionary.Add(cinemaMovieModel, false);
             }
 
             return dictionary;

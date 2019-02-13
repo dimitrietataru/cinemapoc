@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CMS.Models.CinemaMovie;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using CoreModels = Core.Models;
@@ -14,6 +15,6 @@ namespace CMS.Models.Movie
         [DisplayName("Movie Description")]
         public string MovieDescription { get; set; }
 
-        public Dictionary<CoreModels.Cinema, bool> CinemaDictionary { get; set; } = new Dictionary<CoreModels.Cinema, bool>();
+        public Dictionary<CinemaMovieModel, bool> CinemaDictionary { get; set; } = new Dictionary<CinemaMovieModel, bool>();
     }
 }

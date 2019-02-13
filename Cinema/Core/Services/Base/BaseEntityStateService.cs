@@ -1,5 +1,6 @@
 ﻿using Core.Context;
 using Core.Interfaces.Base;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Core.Services.Base
@@ -14,6 +15,12 @@ namespace Core.Services.Base
         public async virtual Task CreateAsync(TEntity entity)
         {
             await context.Set<TEntity>().AddAsync(entity);
+            await context.SaveChangesAsync();
+        }
+
+        public async virtual Task CreateAsync(List<TEntity> entity)
+        {
+            await context.Set<TEntity>().AddRangeAsync(entity);
             await context.SaveChangesAsync();
         }
 
