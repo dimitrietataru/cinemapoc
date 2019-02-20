@@ -25,9 +25,9 @@ namespace Core.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Capacity");
-
                     b.Property<Guid>("CinemaId");
+
+                    b.Property<int>("Columns");
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -40,6 +40,8 @@ namespace Core.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<int>("Rows");
 
                     b.Property<int>("ScreenType")
                         .ValueGeneratedOnAdd()

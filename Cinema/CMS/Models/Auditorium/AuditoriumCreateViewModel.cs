@@ -1,6 +1,8 @@
-﻿using Core.Models.Enums;
+﻿using CMS.Models.Auditorium.Partial;
+using Core.Models.Enums;
 using Core.Models.NoSql;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,11 +36,11 @@ namespace CMS.Models.Auditorium
 
 		[Required(ErrorMessage = "Rows is required")]
 		[DisplayName("Rows")]
-		public int Rows { get; set; }
+		public int Rows { get; set; } = 20;
 
 		[Required(ErrorMessage = "Columns is required")]
 		[DisplayName("Columns")]
-		public int Columns { get; set; }
+		public int Columns { get; set; } = 20;
 
 		[DisplayName("Status")]
 		public AuditoriumStatus Status { get; set; }
@@ -51,6 +53,7 @@ namespace CMS.Models.Auditorium
 
 		public SelectList CinemaList { get; set; }
 
-		public List<Seat> Seats { get; set; } = new List<Seat>();
+		[ViewComponentContext]
+		public AuditoriumSeatsViewModel AuditoriumSeats { get; set; } = new AuditoriumSeatsViewModel();
 	}
 }

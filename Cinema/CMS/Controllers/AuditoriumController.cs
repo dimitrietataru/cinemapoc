@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using CMS.Models;
 using CMS.Models.Auditorium;
 using CMS.Models.Cinema;
@@ -10,11 +6,14 @@ using Core.Interfaces;
 using Core.Models;
 using Core.Models.NoSql;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CMS.Controllers
 {
-    public class AuditoriumController : Controller
-    {
+	public class AuditoriumController : Controller
+	{
 		private readonly IAuditoriumService auditoriumService;
 		private readonly ICinemaService cinemaService;
 		private readonly IMapper mapper;
@@ -49,7 +48,7 @@ namespace CMS.Controllers
 
 				return View(dto);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				// TODO: Add proper error page and Log
 				return RedirectToAction("Index", "Home");
@@ -81,8 +80,9 @@ namespace CMS.Controllers
 #pragma warning restore CS1998
 		{
 			var cinemas = await cinemaService.GetAllAsync();
-			var cinemasDetail = mapper.Map <List<CinemaDetailsViewModel>>(cinemas);
+			var cinemasDetail = mapper.Map<List<CinemaDetailsViewModel>>(cinemas);
 			var dto = new AuditoriumCreateViewModel(cinemasDetail);
+			dto.AuditoriumSeats.Seats.Add(new Seat(0, 0));
 
 			return View(dto);
 		}
@@ -97,13 +97,13 @@ namespace CMS.Controllers
 					return View(dto);
 				}
 
-				dto.Seats = GetSeats(dto.Rows, dto.Columns);
+				//dto.Seats = GetSeats();
 				var auditorium = mapper.Map<Auditorium>(dto);
 				await auditoriumService.CreateAsync(auditorium);
 
 				return RedirectToAction(nameof(Index));
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return View(dto);
 			}
@@ -118,7 +118,7 @@ namespace CMS.Controllers
 
 				return View(result);
 			}
-			catch
+			catch (Exception ex)
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -143,6 +143,11 @@ namespace CMS.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+		}
+
+		public async Task<IActionResult> _Seats(int rows, int columns, Guid cinemaId)
+		{
+			return ViewComponent("Auditorium", new { rows, columns, cinemaId });
 		}
 
 		public async Task<IActionResult> Delete(Guid id)
@@ -176,7 +181,7 @@ namespace CMS.Controllers
 			}
 		}
 
-		private static List<Seat> GetSeats(int totalRows, int totalColumns)
+		private static List<Seat> GetSeats(int totalRows = 20, int totalColumns = 20)
 		{
 			var seats = new List<Seat>();
 

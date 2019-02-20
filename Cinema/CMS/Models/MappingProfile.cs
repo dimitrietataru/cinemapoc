@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using CMS.Models.Auditorium;
+using CMS.Models.Auditorium.Partial;
 using CMS.Models.Cinema;
 using CMS.Models.Movie;
 using Core.Models;
 using Core.Models.NoSql;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CMS.Mapping
 {
@@ -24,33 +24,25 @@ namespace CMS.Mapping
 		private void MapAuditoriumModels()
 		{
 			CreateMap<Auditorium, AuditoriumIndexViewModel>();
-			CreateMap<Auditorium, AuditoriumDetailsViewModel>()
-				.ForMember(dest => dest.Seats, opt => opt
-					.MapFrom(src => JsonConvert.DeserializeObject<List<Seat>>(src.Seats)))
-				.AfterMap((src, dest) =>
-				{
-					dest.Rows = dest.Seats.Select(s => s.Row).Max();
-					dest.Columns = dest.Seats.Select(s => s.Column).Max();
-				})
-				.IgnoreAllPropertiesWithAnInaccessibleSetter();
+			CreateMap<Auditorium, AuditoriumDetailsViewModel>();
 			CreateMap<Auditorium, AuditoriumCreateViewModel>()
+				.IgnoreAllPropertiesWithAnInaccessibleSetter()
+				.ForMember(dest => dest.AuditoriumSeats, opt => opt
+					.MapFrom(src => src));
+			CreateMap<AuditoriumCreateViewModel, Auditorium>()
+				.IgnoreAllPropertiesWithAnInaccessibleSetter()
 				.ForMember(dest => dest.Seats, opt => opt
-					.MapFrom(src => JsonConvert.SerializeObject(src.Seats)))
-				.IgnoreAllPropertiesWithAnInaccessibleSetter();
+					.MapFrom(src => JsonConvert.SerializeObject(src.AuditoriumSeats.Seats)));
 			CreateMap<Auditorium, AuditoriumEditViewModel>()
-				.ForMember(dest => dest.Seats, opt => opt
-					.MapFrom(src => JsonConvert.DeserializeObject<List<Seat>>(src.Seats)))
-				.AfterMap((src, dest) =>
-				{
-					dest.Rows = dest.Seats.Select(s => s.Row).Max();
-					dest.Columns = dest.Seats.Select(s => s.Column).Max();
-				})
-				.IgnoreAllPropertiesWithAnInaccessibleSetter();
-			CreateMap<AuditoriumEditViewModel, Auditorium>()
-				.ForMember(dest => dest.Seats, opt => opt
-					.MapFrom(src => JsonConvert.SerializeObject(src.Seats)))
-				.IgnoreAllPropertiesWithAnInaccessibleSetter();
+				.BeforeMap((src, dest) => dest.AuditoriumSeats = new AuditoriumSeatsViewModel())
+				.ForMember(dest => dest.AuditoriumSeats, opt => opt
+				.MapFrom(src => src));
+			CreateMap<AuditoriumEditViewModel, Auditorium>();
 			CreateMap<Auditorium, AuditoriumDeleteViewModel>();
+			CreateMap<Auditorium, AuditoriumSeatsViewModel>()
+				.ForMember(dest => dest.Seats, opt => opt
+					.MapFrom(src => JsonConvert.DeserializeObject<List<Seat>>(src.Seats)));
+
 		}
 
 		private void MapBookingModels()

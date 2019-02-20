@@ -1,4 +1,5 @@
-﻿using Core.Models.Enums;
+﻿using CMS.Models.Auditorium.Partial;
+using Core.Models.Enums;
 using Core.Models.NoSql;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,6 @@ namespace CMS.Models.Auditorium
 		[DisplayName("Cinema")]
 		public Cinema.CinemaDetailsViewModel Cinema { get; set; }
 
-		public List<Seat> Seats { get; set; } = new List<Seat>();
+		public AuditoriumSeatsViewModel Seats { get; set; }
 	}
 }

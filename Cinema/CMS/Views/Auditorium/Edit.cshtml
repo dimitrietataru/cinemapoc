@@ -49,36 +49,7 @@
                                 asp-items="Html.GetEnumSelectList<AuditoriumScreenType>()" class="form-control"></select>
                         <span asp-validation-for="ScreenType" class="text-danger"></span>
                     </div>
-                    <table class="table table-bordered table-striped">
-                        @for (int i = -2; i < Model.Rows; i++)
-                        {
-                            <tr>
-                                @for (int j = -2; j < Model.Columns; j++)
-                                {
-                                    if (i == -2)
-                                    {
-                                        if (j == -2)
-                                        {
-                                            <th></th>
-                                        }
-                                        else
-                                        {
-                                            <th class="text-center">@(j+2)</th>
-                                        }
-                                    }
-                                    else if (j == -2)
-                                    {
-                                        char row = (char)(66 + i);
-                                        <td class="text-right"><b>@row</b></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-center glyphicon-remove-circle" style="color:black;"></td>
-                                    }
-                                }
-                            </tr>
-                        }
-                    </table>
+                    @await Component.InvokeAsync("Auditorium", new { rows = Model.Rows, columns = Model.Columns })
                     <div class="form-group">
                         <input type="submit" value="Edit" class="btn btn-default" />
                     </div>

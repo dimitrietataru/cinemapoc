@@ -1,0 +1,35 @@
+﻿@using CMS.Models.Auditorium.Partial
+@model AuditoriumSeatsViewModel
+
+<table class="table table-bordered table-striped">
+    @for (int i = 0; i < Model.Rows; i++)
+    {
+    <tr>
+        @for (int j = 0; j < Model.Columns; j++)
+        {
+            @Html.Hidden(string.Format("AuditoriumSeats.Seats[{0}].Row", i + j), i)
+            @Html.Hidden(string.Format("AuditoriumSeats.Seats[{0}].Column", i + j), j)
+            if (i == 0)
+            {
+                if (j == 0)
+                {
+                    <th></th>
+                }
+                else
+                {
+                    <th class="text-center">@(j)</th>
+                }
+            }
+            else if (j == 0)
+            {
+                <td class=""><b>@i</b></td>
+            }
+            else
+            {
+                
+                <td class="text-center" style="color:black;">@Html.CheckBox(string.Format("AuditoriumSeats.Seats[{0}].IsAvailable", i + j), Model.Seats[i+j].IsAvailable)</td>
+            }
+        }
+    </tr>
+    }
+</table>
