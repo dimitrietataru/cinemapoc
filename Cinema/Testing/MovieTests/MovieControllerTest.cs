@@ -150,6 +150,50 @@ namespace Testing.MovieTests
             Assert.Same(viewModel, result.Model);
         }
 
+        [Trait("Category", "Details")]
+        [Fact(DisplayName = "MovieController/Details -> not found")]
+        internal async void GivenDetailsCalledWhenMovieDontThenReturnsErrorPage()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestMovie();
+            var viewModel = modelFaker.GetTestMovieDetails();
+            mockMovieService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync((Movie)null);
+
+            // Act
+            var response = await controllerUnderTest.Details(default);
+
+            // Assert
+            mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<MovieDetailsViewModel>(dbModel), Times.Never());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+        }
+
+        [Trait("Category", "Details")]
+        [Fact(DisplayName = "MovieController/Details -> exception")]
+        internal async void GivenDetailsCalledWhenExceptionThrownThenHandleGracefully()
+        {
+            // Arange
+            mockMovieService
+                .Setup(_ => _.GetByIdAsync(default))
+                .Throws<Exception>();
+
+            // Act
+            var response = await controllerUnderTest.Details(default);
+
+            // Assert
+            mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once());
+            mockMapper.Verify(_ => _.Map<MovieDetailsViewModel>(It.IsAny<Movie>()), Times.Never());
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+        }
+
         [Trait("Category", "Create")]
         [Fact(DisplayName = "MovieController/Create/Get -> view")]
         internal async void GivenCreateViewCalledThenReturnsCreateView()
@@ -186,6 +230,27 @@ namespace Testing.MovieTests
             Assert.True(result != null);
             Assert.True(result is IActionResult);
             Assert.Equal("Details", result.ActionName);
+        }
+
+        [Trait("Category", "Create")]
+        [Fact(DisplayName = "MovieController/Create -> invalid input")]
+        internal async void GivenCreateCalledWhenInputIsNotValidThenHandlesGracefully()
+        {
+            // Arange
+            var viewModel = modelFaker.GetTestMovieCreate();
+
+            // Act
+            controllerUnderTest.ModelState.AddModelError("key", "errorMessage");
+            var response = await controllerUnderTest.Create(viewModel);
+
+            // Assert
+            mockMapper.Verify(_ => _.Map<Movie>(viewModel), Times.Never());
+            mockMovieService.Verify(_ => _.CreateAsync(It.IsAny<Movie>()), Times.Never());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is MovieCreateViewModel);
         }
 
         [Trait("Category", "Create")]
@@ -240,6 +305,52 @@ namespace Testing.MovieTests
             Assert.True(result.Model != null);
             Assert.True(result is IActionResult);
             Assert.True(result.Model is MovieEditViewModel);
+        }
+
+        [Trait("Category", "Edit")]
+        [Fact(DisplayName = "MovieController/Edit -> not found")]
+        internal async void GivenEditViewCalledButMovieDontExistThenReturnsErrorPage()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestMovie();
+            var viewModel = modelFaker.GetTestMovieEdit();
+
+            mockMovieService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync((Movie)null);
+
+            // Act
+            var response = await controllerUnderTest.Edit((Guid)default);
+
+            // Assert
+            mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once);
+            mockMapper.Verify(_ => _.Map<MovieEditViewModel>(dbModel), Times.Never);
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+        }
+
+        [Trait("Category", "Edit")]
+        [Fact(DisplayName = "MovieController/Edit -> invalid input")]
+        internal async void GivenEditCalledWhenInputIsNotValidThenHandlesGracefully()
+        {
+            // Arange
+            var viewModel = modelFaker.GetTestMovieCreate();
+
+            // Act
+            controllerUnderTest.ModelState.AddModelError("key", "errorMessage");
+            var response = await controllerUnderTest.Create(viewModel);
+
+            // Assert
+            mockMapper.Verify(_ => _.Map<Movie>(viewModel), Times.Never());
+            mockMovieService.Verify(_ => _.CreateAsync(It.IsAny<Movie>()), Times.Never());
+            var result = Assert.IsType<ViewResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+            Assert.True(result.Model != null);
+            Assert.True(result.Model is MovieCreateViewModel);
         }
 
         [Trait("Category", "Edit")]
@@ -310,35 +421,33 @@ namespace Testing.MovieTests
             Assert.Equal("Error", result.ControllerName);
         }
 
-        //[Trait("Category", "CinemaMovie")]
-        //[Fact(DisplayName = "MovieController/AssignMovie -> view")]
-        //internal async void GivenAssignMovieViewCallWhenMovieExistsAndReturnsView()
-        //{
-        //    // Arange
-        //    var dbModel = modelFaker.GetTestMovie();
-        //    var viewModel = modelFaker.GetTestCinemaMovieViewModel();
-        //    var cinemas = modelFaker.GetTestCinemas(10);
+        [Trait("Category", "CinemaMovie")]
+        [Fact(DisplayName = "MovieController/AssignMovie -> view")]
+        internal async void GivenAssignMovieViewCallWhenMovieExistsAndReturnsView()
+        {
+            // Arange
+            var dbModel = modelFaker.GetTestMovie();
+            var viewModel = modelFaker.GetTestCinemaMovieViewModel();
+            var cinemas = modelFaker.GetTestCinemas(10);
 
-        //    mockMovieService
-        //        .Setup(_ => _.GetByIdAsync(default))
-        //        .ReturnsAsync(dbModel);
+            mockMovieService
+                .Setup(_ => _.GetByIdAsync(default))
+                .ReturnsAsync(dbModel);
 
-        //    mockCinemaService
-        //        .Setup(_ => _.GetAllAsync())
-        //        .ReturnsAsync(cinemas);
+            mockCinemaService
+                .Setup(_ => _.GetAllAsync())
+                .ReturnsAsync(cinemas);
 
-        //    // Act
-        //    var response = await controllerUnderTest.AssignMovie((Guid)default);
+            // Act
+            var response = await controllerUnderTest.AssignMovie((Guid)default);
 
-        //    // Assert
-        //    mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once);
-        //    mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Once);
-        //    var result = Assert.IsType<ViewResult>(response);
-        //    Assert.True(result != null);
-        //    Assert.True(result.Model != null);
-        //    Assert.True(result is IActionResult);
-        //    Assert.True(result.Model is CinemaMovieViewModel);
-        //}
+            // Assert
+            mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once);
+            mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Once);
+            var result = Assert.IsType<RedirectToActionResult>(response);
+            Assert.True(result != null);
+            Assert.True(result is IActionResult);
+        }
 
         [Trait("Category", "CinemaMovie")]
         [Fact(DisplayName = "MovieController/AssignMovie -> exception")]

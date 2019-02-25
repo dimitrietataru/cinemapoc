@@ -99,6 +99,11 @@ namespace CMS.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
                 var movie = mapper.Map<Movie>(model);
                 await movieService.CreateAsync(movie);
 
@@ -137,10 +142,15 @@ namespace CMS.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
                 var movie = mapper.Map<Movie>(model);
                 await movieService.UpdateAsync(movie);
 
-                return RedirectToAction("Index", "Error");
+                return RedirectToAction("Details", "Movie", new { id = movie.Id });
             }
             catch
             {

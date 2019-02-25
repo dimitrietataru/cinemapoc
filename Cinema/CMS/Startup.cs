@@ -27,10 +27,7 @@ namespace CMS
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.Configure<FormOptions>(options =>
-            {
-                options.ValueCountLimit = int.MaxValue;
-            });
+            services.Configure<FormOptions>(options => { options.ValueCountLimit = int.MaxValue; });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

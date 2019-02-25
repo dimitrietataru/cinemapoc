@@ -7,34 +7,41 @@ namespace CMS.Models.Movie
 {
     public class MovieCreateViewModel
     {
-        [DisplayName("Name")]
         [Required(ErrorMessage = "Name is required")]
+        [MaxLength(50, ErrorMessage = "Maximum length exceeded (50 characters)")]
+        [DisplayName("Name")]
         public string Name { get; set; }
 
-        [DisplayName("Description")]
         [Required(ErrorMessage = "Description is required")]
+        [MaxLength(500, ErrorMessage = "Maximum length exceeded (500 characters)")]
+        [DisplayName("Description")]
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [DisplayName("Duration")]
         [Required(ErrorMessage = "Duration is required")]
+        [DisplayName("Duration")]
         public int Duration { get; set; }
 
+        [MaxLength(250, ErrorMessage = "Maximum length exceeded (250 characters)")]
+        [DataType(DataType.MultilineText)]
         [DisplayName("Actors")]
         public string Actors { get; set; }
 
+        [MaxLength(50, ErrorMessage = "Maximum length exceeded (50 characters)")]
         [DisplayName("Studio")]
         public string Studio { get; set; }
 
-        [DisplayName("ProjectionType")]
         [Required(ErrorMessage = "Projection Type is required")]
+        [DisplayName("ProjectionType")]
         public ProjectionType ProjectionType { get; set; }
 
-        [DisplayName("Rating")]
         [Required(ErrorMessage = "Rating is required")]
+        [DisplayName("Rating")]
         public MovieRating Rating { get; set; }
 
-        [DisplayName("Genre")]
+        [MaxLength(50, ErrorMessage = "Maximum length exceeded (50 characters)")]
         [Required(ErrorMessage = "Genre is required")]
+        [DisplayName("Genre")]
         public string Genre { get; set; }
 
         [DisplayName("Trailer Url")]
@@ -46,12 +53,12 @@ namespace CMS.Models.Movie
         [DisplayName("Imbd Url")]
         public string ImbdUrl { get; set; }
 
-        [DisplayName("Start Date")]
         [Required(ErrorMessage = "Start Date is required")]
-        public DateTime StartDate { get; set; }
+        [DisplayName("Start Date")]
+        public DateTime? StartDate { get; set; }
 
-        [DisplayName("End Date")]
         [Required(ErrorMessage = "End Date is required")]
-        public DateTime EndDate { get; set; }
+        [DisplayName("End Date")]
+        public DateTime? EndDate { get; set; }
     }
 }
