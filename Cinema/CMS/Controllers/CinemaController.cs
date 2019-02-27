@@ -41,9 +41,8 @@ namespace CMS.Controllers
 
                 return View(dto);
             }
-            catch (Exception e)
+            catch
             {
-                // TODO: Add proper error page and Log
                 return RedirectToAction("Index", "Home"); 
             }
         }
@@ -58,9 +57,9 @@ namespace CMS.Controllers
                     return NotFound();
                 }
 
-                var result = mapper.Map<CinemaDetailsViewModel>(cinema);
+                var dto = mapper.Map<CinemaDetailsViewModel>(cinema);
 
-                return View(result);
+                return View(dto);
             }
             catch
             {
@@ -68,9 +67,7 @@ namespace CMS.Controllers
             }
         }
 
-        #pragma warning disable CS1998
-        public async Task<IActionResult> Create()
-        #pragma warning restore CS1998
+        public IActionResult Create()
         {
             var dto = new CinemaCreateViewModel();
 
@@ -90,7 +87,7 @@ namespace CMS.Controllers
                 var cinema = mapper.Map<Cinema>(dto);
                 await cinemaService.CreateAsync(cinema);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = cinema.Id });
             }
             catch
             {
@@ -103,9 +100,9 @@ namespace CMS.Controllers
             try
             {
                 var cinema = await cinemaService.GetByIdAsync(id);
-                var result = mapper.Map<CinemaEditViewModel>(cinema);
+                var dto = mapper.Map<CinemaEditViewModel>(cinema);
 
-                return View(result);
+                return View(dto);
             }
             catch
             {
@@ -139,9 +136,9 @@ namespace CMS.Controllers
             try
             {
                 var cinema = await cinemaService.GetByIdAsync(id);
-                var result = mapper.Map<CinemaDeleteViewModel>(cinema);
+                var dto = mapper.Map<CinemaDeleteViewModel>(cinema);
 
-                return View(result);
+                return View(dto);
             }
             catch
             {

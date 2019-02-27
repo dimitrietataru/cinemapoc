@@ -56,10 +56,10 @@ namespace CMS.Mapping
         private void MapMovieModels()
         {
             CreateMap<Movie, MovieIndexViewModel>();
-            CreateMap<Movie, MovieCreateViewModel>().ReverseMap();
-            CreateMap<Movie, MovieEditViewModel>();
-            CreateMap<MovieEditViewModel, Movie>();
             CreateMap<Movie, MovieDetailsViewModel>();
+            CreateMap<Movie, MovieCreateViewModel>().ReverseMap();
+            CreateMap<Movie, MovieEditViewModel>().ReverseMap();
+            CreateMap<Movie, MovieDeleteViewModel>();
         }
     }
 }

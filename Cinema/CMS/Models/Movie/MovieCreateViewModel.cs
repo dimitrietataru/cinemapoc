@@ -8,57 +8,60 @@ namespace CMS.Models.Movie
     public class MovieCreateViewModel
     {
         [Required(ErrorMessage = "Name is required")]
-        [MaxLength(50, ErrorMessage = "Maximum length exceeded (50 characters)")]
+        [MaxLength(200, ErrorMessage = "Maximum length exceeded (200 characters)")]
         [DisplayName("Name")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Description is required")]
-        [MaxLength(500, ErrorMessage = "Maximum length exceeded (500 characters)")]
-        [DisplayName("Description")]
         [DataType(DataType.MultilineText)]
+        [DisplayName("Description")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Duration is required")]
-        [DisplayName("Duration")]
+        [DisplayName("Duration (min)")]
         public int Duration { get; set; }
 
-        [MaxLength(250, ErrorMessage = "Maximum length exceeded (250 characters)")]
+        [Required(ErrorMessage = "Actors is required")]
         [DataType(DataType.MultilineText)]
         [DisplayName("Actors")]
         public string Actors { get; set; }
 
+        [Required(ErrorMessage = "Studio is required")]
         [MaxLength(50, ErrorMessage = "Maximum length exceeded (50 characters)")]
         [DisplayName("Studio")]
         public string Studio { get; set; }
 
-        [Required(ErrorMessage = "Projection Type is required")]
-        [DisplayName("ProjectionType")]
+        [Required(ErrorMessage = "Projection type is required")]
+        [DisplayName("Projection type")]
         public ProjectionType ProjectionType { get; set; }
 
         [Required(ErrorMessage = "Rating is required")]
         [DisplayName("Rating")]
         public MovieRating Rating { get; set; }
 
-        [MaxLength(50, ErrorMessage = "Maximum length exceeded (50 characters)")]
         [Required(ErrorMessage = "Genre is required")]
+        [MaxLength(200, ErrorMessage = "Maximum length exceeded (200 characters)")]
         [DisplayName("Genre")]
         public string Genre { get; set; }
 
+        [MaxLength(200, ErrorMessage = "Maximum length exceeded (200 characters)")]
         [DisplayName("Trailer Url")]
         public string TrailerUrl { get; set; }
 
+        [MaxLength(200, ErrorMessage = "Maximum length exceeded (200 characters)")]
         [DisplayName("Poster Url")]
         public string PosterUrl { get; set; }
 
-        [DisplayName("Imbd Url")]
+        [MaxLength(200, ErrorMessage = "Maximum length exceeded (200 characters)")]
+        [DisplayName("IMDb Url")]
         public string ImbdUrl { get; set; }
 
-        [Required(ErrorMessage = "Start Date is required")]
-        [DisplayName("Start Date")]
+        [Required(ErrorMessage = "Start date is required")]
+        [DisplayName("Start date")]
         public DateTime? StartDate { get; set; }
 
-        [Required(ErrorMessage = "End Date is required")]
-        [DisplayName("End Date")]
+        [Required(ErrorMessage = "End date is required")]
+        [DisplayName("End date")]
         public DateTime? EndDate { get; set; }
     }
 }

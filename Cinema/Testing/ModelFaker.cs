@@ -201,6 +201,21 @@ namespace Testing
             };
         }
 
+        public MovieDeleteViewModel GetTestMovieDelete()
+        {
+            return new MovieDeleteViewModel
+            {
+                Id = default,
+                Name = string.Empty,
+                Description = string.Empty
+            };
+        }
+
+        public List<Movie> GetTestMovies(int count)
+        {
+            return Enumerable.Repeat(GetTestMovie(), count).ToList();
+        }
+
         public CinemaMovieModel GetTestCinemaMovieModel()
         {
             return new CinemaMovieModel
@@ -208,6 +223,11 @@ namespace Testing
                 Id = default,
                 Name = string.Empty
             };
+        }
+
+        public List<MovieIndexViewModel> GetTestMovieIndexes(int count)
+        {
+            return Enumerable.Repeat(GetTestMovieIndex(), count).ToList();
         }
 
         public CinemaMovieViewModel GetTestCinemaMovieViewModel()
@@ -219,16 +239,6 @@ namespace Testing
                 MovieDescription = string.Empty,
                 CinemaDictionary = GetCinemaDictionary()
             };
-        }
-
-        public List<Movie> GetTestMovies(int count)
-        {
-            return Enumerable.Repeat(GetTestMovie(), count).ToList();
-        }
-
-        public List<MovieIndexViewModel> GetTestMovieIndexes(int count)
-        {
-            return Enumerable.Repeat(GetTestMovieIndex(), count).ToList();
         }
 
         public Dictionary<CinemaMovieModel, bool> GetCinemaDictionary()

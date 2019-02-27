@@ -1,9 +1,6 @@
-﻿using Core.Models;
-using Core.Models.Enums;
+﻿using Core.Models.Enums;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace CMS.Models.Movie
 {
@@ -17,7 +14,7 @@ namespace CMS.Models.Movie
         [DisplayName("Description")]
         public string Description { get; set; }
 
-        [DisplayName("Duration")]
+        [DisplayName("Minutes")]
         public int Duration { get; set; }
 
         [DisplayName("Actors")]
@@ -26,11 +23,10 @@ namespace CMS.Models.Movie
         [DisplayName("Studio")]
         public string Studio { get; set; }
 
-        [DisplayName("ProjectionType")]
+        [DisplayName("Projection type")]
         public ProjectionType ProjectionType { get; set; }
 
         [DisplayName("Rating")]
-        [Required(ErrorMessage = "Rating is required")]
         public MovieRating Rating { get; set; }
 
         [DisplayName("Genre")]
@@ -42,13 +38,13 @@ namespace CMS.Models.Movie
         [DisplayName("Poster Url")]
         public string PosterUrl { get; set; }
 
-        [DisplayName("Imbd Url")]
+        [DisplayName("IMDb Url")]
         public string ImbdUrl { get; set; }
 
-        [DisplayName("Start Date")]
+        [DisplayName("Start date")]
         public DateTime StartDate { get; set; }
 
-        [DisplayName("End Date")]
+        [DisplayName("End date")]
         public DateTime EndDate { get; set; }
     }
 }

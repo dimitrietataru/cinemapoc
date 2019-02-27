@@ -42,10 +42,10 @@ namespace CMS.Controllers
             try
             {
                 var pagedQuery = movieService.GetPagedQuery(orderBy, isAsc, filter, isExact);
-                var cinemas = await movieService.GetPagedAsync(pagedQuery, page - 1, size);
+                var movies = await movieService.GetPagedAsync(pagedQuery, page - 1, size);
                 var count = await movieService.GetPagedCountAsync(pagedQuery);
 
-                var viewItems = mapper.Map<List<MovieIndexViewModel>>(cinemas);
+                var viewItems = mapper.Map<List<MovieIndexViewModel>>(movies);
                 var dto = new PagedViewModel<MovieIndexViewModel>(
                     viewItems, page, size, orderBy, isAsc, filter, isExact, count);
 
@@ -62,10 +62,9 @@ namespace CMS.Controllers
             try
             {
                 var movie = await movieService.GetByIdAsync(id);
-
                 if (movie is null)
                 {
-                    return RedirectToAction("Index", "Error");
+                    return NotFound();
                 }
 
                 var dto = mapper.Map<MovieDetailsViewModel>(movie);
@@ -74,44 +73,35 @@ namespace CMS.Controllers
             }
             catch
             {
-                // TODO: Add proper error page and Log
-                return RedirectToAction("Index", "Error");
+                return RedirectToAction("Index", "Home");
             }
         }
 
-#pragma warning disable CS1998
-        public async Task<IActionResult> Create()
-#pragma warning restore CS1998
+        public IActionResult Create()
         {
-            try
-            {
-                return View(new MovieCreateViewModel());
-            }
-            catch
-            {
-                return RedirectToAction("Index", "Error");
-            }
+            var dto = new MovieCreateViewModel();
+
+            return View(dto);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MovieCreateViewModel model)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(MovieCreateViewModel dto)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(model);
+                    return View(dto);
                 }
 
-                var movie = mapper.Map<Movie>(model);
+                var movie = mapper.Map<Movie>(dto);
                 await movieService.CreateAsync(movie);
 
-                return RedirectToAction("Details", "Movie", new { id = movie.Id });
+                return RedirectToAction(nameof(Details), new { id = movie.Id });
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                return View(dto);
             }
         }
 
@@ -120,41 +110,34 @@ namespace CMS.Controllers
             try
             {
                 var movie = await movieService.GetByIdAsync(id);
-
-                if (movie is null)
-                {
-                    return RedirectToAction("Index", "Error");
-                }
-
                 var dto = mapper.Map<MovieEditViewModel>(movie);
 
                 return View(dto);
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                return RedirectToAction("Index", "Home");
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(MovieEditViewModel model)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(MovieEditViewModel dto)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(model);
+                    return View(dto);
                 }
 
-                var movie = mapper.Map<Movie>(model);
+                var movie = mapper.Map<Movie>(dto);
                 await movieService.UpdateAsync(movie);
 
-                return RedirectToAction("Details", "Movie", new { id = movie.Id });
+                return RedirectToAction(nameof(Details), new { id = movie.Id });
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -163,19 +146,29 @@ namespace CMS.Controllers
             try
             {
                 var movie = await movieService.GetByIdAsync(id);
+                var dto = mapper.Map<MovieDeleteViewModel>(movie);
 
-                if (movie is null)
-                {
-                    return RedirectToAction("Index", "Error");
-                }
-
-                await movieService.DeleteAsync(movie);
-
-                return RedirectToAction("Index", "Movie");
+                return View(dto);
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(MovieDeleteViewModel dto)
+        {
+            try
+            {
+                var movie = await movieService.GetByIdAsync(dto.Id);
+                await movieService.DeleteAsync(movie);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -307,4 +300,3 @@ namespace CMS.Controllers
         }
     }
 }
-

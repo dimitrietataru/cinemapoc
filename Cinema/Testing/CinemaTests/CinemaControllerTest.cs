@@ -188,12 +188,12 @@ namespace Testing.CinemaTests
 
         [Trait("Category", "Create")]
         [Fact(DisplayName = "CinemaController/Create/Get -> view")]
-        internal async void GivenCreateViewCalledThenReturnsCreateView()
+        internal void GivenCreateViewCalledThenReturnsCreateView()
         {
             // Arange
 
             // Act
-            var response = await controllerUnderTest.Create();
+            var response = controllerUnderTest.Create();
 
             // Assert
             var result = Assert.IsType<ViewResult>(response);
@@ -221,7 +221,7 @@ namespace Testing.CinemaTests
             var result = Assert.IsType<RedirectToActionResult>(response);
             Assert.True(result != null);
             Assert.True(result is IActionResult);
-            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("Details", result.ActionName);
         }
 
         [Trait("Category", "Create")]

@@ -1,8 +1,6 @@
 ﻿@model CMS.Models.Movie.MovieDetailsViewModel
-
 @{
     ViewData["Title"] = "Details";
-
 }
 
 <div class="col-lg-12 col-md-12">
@@ -38,6 +36,28 @@
                 </dl>
                 <dl class="dl-horizontal">
                     <dt>
+                        @Html.DisplayNameFor(model => model.Actors)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Actors)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Studio)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Studio)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ProjectionType)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ProjectionType)
+                    </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                    <dt>
                         @Html.DisplayNameFor(model => model.Rating)
                     </dt>
                     <dd>
@@ -49,6 +69,43 @@
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.Genre)
+                    </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TrailerUrl)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.TrailerUrl)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PosterUrl)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PosterUrl)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ImbdUrl)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ImbdUrl)
+                    </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.StartDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.EndDate)
                     </dd>
                 </dl>
             </div>

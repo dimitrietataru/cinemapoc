@@ -1,25 +1,23 @@
 ﻿@model CMS.Models.Movie.MovieEditViewModel
-
 @{
-    ViewData["Title"] = "Edit";
-
+    ViewData["Title"] = "Edit movie";
 }
 
 <div class="col-lg-12 col-md-12">
     <div class="panel panel-default mt-40">
         <div class="panel-heading">
-            <h4>Edit Movie</h4>
+            <h4>EDIT MOVIE</h4>
         </div>
         <div class="panel-body panel-body-responsive">
             <div class="col-lg-12 col-md-12 row">
                 <form asp-action="Edit">
-                    @Html.HiddenFor(model => model.Id)
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <input type="hidden" asp-for="Id" class="form-control" />
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group has-feedback">
                             <label asp-for="Name" class="control-label"></label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
-                            <i class="form-control-feedback glyphicon glyphicon-film"></i>
+                            <i class="form-control-feedback glyphicon glyphicon-asterisk"></i>
                         </div>
                         <div class="form-group has-feedback">
                             <label asp-for="Description" class="control-label"></label>
@@ -31,7 +29,7 @@
                             <label asp-for="Duration" class="control-label"></label>
                             <input asp-for="Duration" class="form-control" />
                             <span asp-validation-for="Duration" class="text-danger"></span>
-                            <i class="form-control-feedback glyphicon glyphicon-time"></i>
+                            <i class="form-control-feedback glyphicon glyphicon-hourglass"></i>
                         </div>
                         <div class="form-group has-feedback">
                             <label asp-for="Actors" class="control-label"></label>
@@ -49,7 +47,7 @@
                             <label asp-for="ProjectionType" class="control-label"></label>
                             <input asp-for="ProjectionType" class="form-control" />
                             <span asp-validation-for="ProjectionType" class="text-danger"></span>
-                            <i class="form-control-feedback glyphicon glyphicon-camera"></i>
+                            <i class="form-control-feedback glyphicon glyphicon-sunglasses"></i>
                         </div>
                         <div class="form-group has-feedback">
                             <label asp-for="Rating" class="control-label"></label>
@@ -61,34 +59,37 @@
                             <label asp-for="Genre" class="control-label"></label>
                             <input asp-for="Genre" class="form-control" />
                             <span asp-validation-for="Genre" class="text-danger"></span>
-                            <i class="form-control-feedback glyphicon glyphicon-asterisk"></i>
+                            <i class="form-control-feedback glyphicon glyphicon-film"></i>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group has-feedback">
                             <label asp-for="TrailerUrl" class="control-label"></label>
                             <input asp-for="TrailerUrl" class="form-control" />
                             <span asp-validation-for="TrailerUrl" class="text-danger"></span>
+                            <i class="form-control-feedback glyphicon glyphicon-globe"></i>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group has-feedback">
                             <label asp-for="PosterUrl" class="control-label"></label>
                             <input asp-for="PosterUrl" class="form-control" />
                             <span asp-validation-for="PosterUrl" class="text-danger"></span>
+                            <i class="form-control-feedback glyphicon glyphicon-globe"></i>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group has-feedback">
                             <label asp-for="ImbdUrl" class="control-label"></label>
                             <input asp-for="ImbdUrl" class="form-control" />
                             <span asp-validation-for="ImbdUrl" class="text-danger"></span>
+                            <i class="form-control-feedback glyphicon glyphicon-globe"></i>
                         </div>
                         <div class="form-group has-feedback">
                             <label asp-for="StartDate" class="control-label"></label>
                             <input asp-for="StartDate" class="form-control" />
                             <span asp-validation-for="StartDate" class="text-danger"></span>
-                            <i class="form-control-feedback glyphicon glyphicon-time"></i>
+                            <i class="form-control-feedback glyphicon glyphicon-calendar"></i>
                         </div>
                         <div class="form-group has-feedback">
                             <label asp-for="EndDate" class="control-label"></label>
                             <input asp-for="EndDate" class="form-control" />
                             <span asp-validation-for="EndDate" class="text-danger"></span>
-                            <i class="form-control-feedback glyphicon glyphicon-time"></i>
+                            <i class="form-control-feedback glyphicon glyphicon-calendar"></i>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Edit" class="btn btn-default" />
@@ -97,15 +98,21 @@
                 </form>
             </div>
         </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 btn-group">
+                    <a href="@Url.Action("Index", "Movie")" title="Back to list" class="btn btn-default">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </a>
+                    <a href="@Url.Action("Index", "Home")" title="Home" class="btn btn-default">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
