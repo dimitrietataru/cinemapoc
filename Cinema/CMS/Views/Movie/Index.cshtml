@@ -93,7 +93,7 @@
                             </td>
                             <td>
                                 <div class="btn-group pull-right">
-                                    <a href="@Url.Action("AssignMovie", "Movie", new { id = item.Id })" title="Assign Movie to Cinema" class="btn btn-default">
+                                    <a href="@Url.Action("Assign", "CinemaMovie", new { movieId = item.Id })" title="Assign Movie to Cinema" class="btn btn-default">
                                         <span class="glyphicon glyphicon-facetime-video"></span>
                                     </a>
                                     <a href="@Url.Action("Details", "Movie", new { id = item.Id })" title="Details" class="btn btn-default">

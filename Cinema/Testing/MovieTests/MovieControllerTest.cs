@@ -499,62 +499,62 @@ namespace Testing.MovieTests
             Assert.Equal("Home", result.ControllerName);
         }
 
-        [Trait("Category", "CinemaMovie")]
-        [Fact(DisplayName = "MovieController/AssignMovie -> view")]
-        internal async void GivenAssignMovieViewCallWhenMovieExistsAndReturnsView()
-        {
-            // Arange
-            var dbModel = modelFaker.GetTestMovie();
-            var viewModel = modelFaker.GetTestCinemaMovieViewModel();
-            var cinemas = modelFaker.GetTestCinemas(10);
+        //[Trait("Category", "CinemaMovie")]
+        //[Fact(DisplayName = "MovieController/AssignMovie -> view")]
+        //internal async void GivenAssignMovieViewCallWhenMovieExistsAndReturnsView()
+        //{
+        //    // Arange
+        //    var dbModel = modelFaker.GetTestMovie();
+        //    var viewModel = modelFaker.GetTestCinemaMovieViewModel();
+        //    var cinemas = modelFaker.GetTestCinemas(10);
 
-            mockMovieService
-                .Setup(_ => _.GetByIdAsync(default))
-                .ReturnsAsync(dbModel);
+        //    mockMovieService
+        //        .Setup(_ => _.GetByIdAsync(default))
+        //        .ReturnsAsync(dbModel);
 
-            mockCinemaService
-                .Setup(_ => _.GetAllAsync())
-                .ReturnsAsync(cinemas);
+        //    mockCinemaService
+        //        .Setup(_ => _.GetAllAsync())
+        //        .ReturnsAsync(cinemas);
 
-            // Act
-            var response = await controllerUnderTest.AssignMovie((Guid)default);
+        //    // Act
+        //    var response = await controllerUnderTest.AssignMovie((Guid)default);
 
-            // Assert
-            mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once);
-            mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Once);
-            var result = Assert.IsType<RedirectToActionResult>(response);
-            Assert.True(result != null);
-            Assert.True(result is IActionResult);
-        }
+        //    // Assert
+        //    mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once);
+        //    mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Once);
+        //    var result = Assert.IsType<RedirectToActionResult>(response);
+        //    Assert.True(result != null);
+        //    Assert.True(result is IActionResult);
+        //}
 
-        [Trait("Category", "CinemaMovie")]
-        [Fact(DisplayName = "MovieController/AssignMovie -> exception")]
-        internal async void GivenAssignMovieViewCallWhenMovieDontExistAndReturnsException()
-        {
-            // Arange
-            var dbModel = modelFaker.GetTestMovie();
-            var viewModel = modelFaker.GetTestCinemaMovieViewModel();
-            var cinemas = modelFaker.GetTestCinemas(10);
+        //[Trait("Category", "CinemaMovie")]
+        //[Fact(DisplayName = "MovieController/AssignMovie -> exception")]
+        //internal async void GivenAssignMovieViewCallWhenMovieDontExistAndReturnsException()
+        //{
+        //    // Arange
+        //    var dbModel = modelFaker.GetTestMovie();
+        //    var viewModel = modelFaker.GetTestCinemaMovieViewModel();
+        //    var cinemas = modelFaker.GetTestCinemas(10);
 
-            mockMovieService
-                .Setup(_ => _.GetByIdAsync(default))
-                .Throws<Exception>();
+        //    mockMovieService
+        //        .Setup(_ => _.GetByIdAsync(default))
+        //        .Throws<Exception>();
 
-            mockCinemaService
-                .Setup(_ => _.GetAllAsync())
-                .ReturnsAsync(cinemas);
+        //    mockCinemaService
+        //        .Setup(_ => _.GetAllAsync())
+        //        .ReturnsAsync(cinemas);
 
-            // Act
-            var response = await controllerUnderTest.AssignMovie((Guid)default);
+        //    // Act
+        //    var response = await controllerUnderTest.AssignMovie((Guid)default);
 
-            // Assert
-            mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once);
-            mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Never);
-            var result = Assert.IsType<RedirectToActionResult>(response);
-            Assert.True(result != null);
-            Assert.True(result is IActionResult);
-            Assert.Equal("Index", result.ActionName);
-            Assert.Equal("Error", result.ControllerName);
-        }
+        //    // Assert
+        //    mockMovieService.Verify(_ => _.GetByIdAsync(default), Times.Once);
+        //    mockCinemaService.Verify(_ => _.GetAllAsync(), Times.Never);
+        //    var result = Assert.IsType<RedirectToActionResult>(response);
+        //    Assert.True(result != null);
+        //    Assert.True(result is IActionResult);
+        //    Assert.Equal("Index", result.ActionName);
+        //    Assert.Equal("Error", result.ControllerName);
+        //}
     }
 }

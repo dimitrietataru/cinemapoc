@@ -216,43 +216,43 @@ namespace Testing
             return Enumerable.Repeat(GetTestMovie(), count).ToList();
         }
 
-        public CinemaMovieModel GetTestCinemaMovieModel()
-        {
-            return new CinemaMovieModel
-            {
-                Id = default,
-                Name = string.Empty
-            };
-        }
+        //public CinemaMovieModel GetTestCinemaMovieModel()
+        //{
+        //    return new CinemaMovieModel
+        //    {
+        //        Id = default,
+        //        Name = string.Empty
+        //    };
+        //}
 
         public List<MovieIndexViewModel> GetTestMovieIndexes(int count)
         {
             return Enumerable.Repeat(GetTestMovieIndex(), count).ToList();
         }
 
-        public CinemaMovieViewModel GetTestCinemaMovieViewModel()
-        {
-            return new CinemaMovieViewModel
-            {
-                MovieId = default,
-                MovieName = string.Empty,
-                MovieDescription = string.Empty,
-                CinemaDictionary = GetCinemaDictionary()
-            };
-        }
+        //public CinemaMovieViewModel GetTestCinemaMovieViewModel()
+        //{
+        //    return new CinemaMovieViewModel
+        //    {
+        //        MovieId = default,
+        //        MovieName = string.Empty,
+        //        MovieDescription = string.Empty,
+        //        CinemaDictionary = GetCinemaDictionary()
+        //    };
+        //}
 
-        public Dictionary<CinemaMovieModel, bool> GetCinemaDictionary()
-        {
-            var dictionary = new Dictionary<CinemaMovieModel, bool>();
+        //public Dictionary<CinemaMovieModel, bool> GetCinemaDictionary()
+        //{
+        //    var dictionary = new Dictionary<CinemaMovieModel, bool>();
 
-            for (int i = 0; i < 10; i++)
-            {
-                var cinemaMovieModel = GetTestCinemaMovieModel();
-                cinemaMovieModel.Id = new System.Guid();
-                dictionary.Add(cinemaMovieModel, false);
-            }
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        var cinemaMovieModel = GetTestCinemaMovieModel();
+        //        cinemaMovieModel.Id = new System.Guid();
+        //        dictionary.Add(cinemaMovieModel, false);
+        //    }
 
-            return dictionary;
-        }
+        //    return dictionary;
+        //}
     }
 }
