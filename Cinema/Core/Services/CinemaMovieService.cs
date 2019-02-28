@@ -10,33 +10,26 @@ using System.Threading.Tasks;
 
 namespace Core.Services
 {
-    public class CinemaMovieService : BaseEntityStateService<CinemaMovie>, ICinemaMovieService
+    public class CinemaMovieService : BaseEntityService<CinemaMovie>, ICinemaMovieService
     {
-        protected readonly CinemaContext context;
+        public CinemaMovieService(CinemaContext context) : base(context)
+        {
+        }
 
-        public CinemaMovieService(CinemaContext context)
-            : base(context) => this.context = context;
-
-        public async Task<List<CinemaMovie>> GetAllByMovieIdAsync(Guid id)
+        public async Task<List<CinemaMovie>> GetByMovieIdAsync(Guid movieId)
         {
             return await context
                .CinemaMovies
                .AsNoTracking()
-               .Where(movie => movie.MovieId == id)
+               .Include(cinemaMovie => cinemaMovie.Movie)
+               .Include(cinemaMovie => cinemaMovie.Cinema)
+               .Where(movie => movie.MovieId == movieId)
                .ToListAsync();
         }
 
-        public async Task Delete(CinemaMovie entity)
+        public async Task AsignCinemaToMovies(Guid movieId, List<KeyValuePair<Guid, bool>> cinemas)
         {
-            context.Entry(entity).State = EntityState.Deleted;
-            await context.SaveChangesAsync();
-        }
-
-        public async Task Delete(List<CinemaMovie> list)
-        {
-            context.CinemaMovies.RemoveRange(list);
-            //context.Entry(list).State = EntityState.Deleted;
-            await context.SaveChangesAsync();
+            var currentAssignments = GetByMovieIdAsync(movieId);
         }
     }
 }

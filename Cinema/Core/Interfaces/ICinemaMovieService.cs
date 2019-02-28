@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
-    public interface ICinemaMovieService : IBaseEntityStateService<CinemaMovie>
+    public interface ICinemaMovieService : IBaseEntityService<CinemaMovie>
     {
-        Task<List<CinemaMovie>> GetAllByMovieIdAsync(Guid id);
-        Task Delete(CinemaMovie entity);
-        Task Delete(List<CinemaMovie> list);
+        Task<List<CinemaMovie>> GetByMovieIdAsync(Guid movieId);
+        Task AsignCinemaToMovies(Guid movieId, List<KeyValuePair<Guid, bool>> cinemas);
     }
 }
