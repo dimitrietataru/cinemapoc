@@ -138,6 +138,78 @@ namespace Testing
             };
         }
 
+        public MovieDetailsViewModel GetTestMovieDetails()
+        {
+            return new MovieDetailsViewModel
+            {
+                Id = default,
+                Name = string.Empty,
+                Description = string.Empty,
+                Duration = default,
+                Actors = default,
+                Studio = default,
+                ProjectionType = ProjectionType.D2D,
+                Rating = MovieRating.G,
+                Genre = default,
+                TrailerUrl = default,
+                PosterUrl = default,
+                ImbdUrl = default,
+                StartDate = default,
+                EndDate = default
+            };
+        }
+
+        public MovieCreateViewModel GetTestMovieCreate()
+        {
+            return new MovieCreateViewModel
+            {
+                Name = string.Empty,
+                Description = string.Empty,
+                Duration = default,
+                Actors = default,
+                Studio = default,
+                ProjectionType = ProjectionType.D2D,
+                Rating = MovieRating.G,
+                Genre = default,
+                TrailerUrl = default,
+                PosterUrl = default,
+                ImbdUrl = default,
+                StartDate = default,
+                EndDate = default
+            };
+        }
+
+        public MovieEditViewModel GetTestMovieEdit()
+        {
+            return new MovieEditViewModel
+            {
+                Id = default,
+                Name = string.Empty,
+                Description = string.Empty,
+                Duration = default,
+                Actors = default,
+                Studio = default,
+                ProjectionType = ProjectionType.D2D,
+                Rating = MovieRating.G,
+                Genre = default,
+                TrailerUrl = default,
+                PosterUrl = default,
+                ImbdUrl = default,
+                StartDate = default,
+                EndDate = default
+            };
+        }
+
+        public MovieDeleteViewModel GetTestMovieDelete()
+        {
+            return new MovieDeleteViewModel
+            {
+                Id = default,
+                Name = string.Empty,
+                Description = string.Empty
+            };
+        }
+
         public List<Movie> GetTestMovies(int count)
         {
             return Enumerable.Repeat(GetTestMovie(), count).ToList();

@@ -17,7 +17,7 @@ namespace Core.Services
 
         public IQueryable<Movie> GetPagedQuery(string orderBy, bool order, string filter, bool isExact)
         {
-            var query = GetBaseQuery();
+            var query = GetQueriable();
 
             if (!string.IsNullOrWhiteSpace(filter) && isExact)
             {

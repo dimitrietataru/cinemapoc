@@ -1,22 +1,19 @@
-﻿using Core.Models.Base;
+﻿using Core.Interfaces.Base;
+using Core.Models.Base;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
-    public interface IBaseService<TEntity, TId>
-        where TEntity : class, IEntity<TId>, IDeletable
+    public interface IBaseService<TEntity, TId> : IBaseEntityService<TEntity>
+        where TEntity : class, IEntity<TId>, IDeletable, IStableEntity
         where TId : struct
     {
-        Task<List<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(TId id);
         Task<List<TEntity>> GetByIdsAsync(List<TId> ids);
-        Task CreateAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity);
-        Task DeleteAsync(TEntity entity);
-        Task SaveAsync();
-        IQueryable<TEntity> GetBaseQuery(bool isTracked = false);
-        Task<int> GetCountAsync();
+        new Task UpdateAsync(TEntity entity);
+        new Task UpdateAsync(List<TEntity> entities);
+        new Task DeleteAsync(TEntity entity);
+        new Task DeleteAsync(List<TEntity> entities);
     }
 }

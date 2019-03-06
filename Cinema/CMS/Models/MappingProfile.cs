@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using CMS.Models.Cinema;
+using CMS.Models.CinemaMovie;
 using CMS.Models.Movie;
 using Core.Models;
 using Core.Models.NoSql;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace CMS.Mapping
@@ -15,6 +17,7 @@ namespace CMS.Mapping
             MapAuditoriumModels();
             MapBookingModels();
             MapCinemaModels();
+            MapCinemaMovieModels();
             MapEventModels();
             MapMovieModels();
         }
@@ -49,6 +52,15 @@ namespace CMS.Mapping
             CreateMap<Cinema, CinemaDeleteViewModel>();
         }
 
+        private void MapCinemaMovieModels()
+        {
+            CreateMap<Movie, MovieAssignViewModel>();
+            CreateMap<Cinema, CinemaAssignViewModel>()
+                .AfterMap((s, d) => d.IsAssigned = false);
+            CreateMap<CinemaAssignViewModel, KeyValuePair<Guid, bool>>()
+                .ConstructUsing(cinema => new KeyValuePair<Guid, bool>(cinema.Id, cinema.IsAssigned));
+        }
+
         private void MapEventModels()
         {
         }
@@ -56,6 +68,10 @@ namespace CMS.Mapping
         private void MapMovieModels()
         {
             CreateMap<Movie, MovieIndexViewModel>();
+            CreateMap<Movie, MovieDetailsViewModel>();
+            CreateMap<Movie, MovieCreateViewModel>().ReverseMap();
+            CreateMap<Movie, MovieEditViewModel>().ReverseMap();
+            CreateMap<Movie, MovieDeleteViewModel>();
         }
     }
 }

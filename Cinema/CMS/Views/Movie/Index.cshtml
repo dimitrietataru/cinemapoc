@@ -41,7 +41,7 @@
                             }
                         </th>
                         <th class="col-lg-1 col-md-1">
-                            @Html.ActionLink("Duration", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Duration"), ("isAsc", !Model.IsAsc) }))
+                            @Html.ActionLink("Minutes", "Index", BuildPagerRoute(new List<(string, object)> { ("orderBy", "Duration"), ("isAsc", !Model.IsAsc) }))
                             @if ("Duration".Equals(Model.OrderBy))
                             {
                                 <i class="@orderArrow"></i>
@@ -93,6 +93,9 @@
                             </td>
                             <td>
                                 <div class="btn-group pull-right">
+                                    <a href="@Url.Action("Assign", "CinemaMovie", new { movieId = item.Id })" title="Assign Movie to Cinema" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-facetime-video"></span>
+                                    </a>
                                     <a href="@Url.Action("Details", "Movie", new { id = item.Id })" title="Details" class="btn btn-default">
                                         <span class="glyphicon glyphicon-eye-open"></span>
                                     </a>

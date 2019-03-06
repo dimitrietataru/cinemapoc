@@ -1,0 +1,46 @@
+﻿@model CMS.Models.Movie.MovieDeleteViewModel
+@{
+    ViewData["Title"] = "Delete movie";
+}
+
+<div class="col-lg-12 col-md-12">
+    <div class="panel panel-default mt-40">
+        <div class="panel-heading">
+            <h4>DELETE MOVIE</h4>
+        </div>
+        <div class="panel-body panel-body-responsive">
+            <div class="col-lg-12 col-md-12 row">
+                <input type="hidden" asp-for="Id" class="form-control" />
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+                </dl>
+                <form asp-action="Delete">
+                    <input type="submit" value="Delete" class="btn btn-default" />
+                </form>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 btn-group">
+                    <a href="@Url.Action("Index", "Movie")" title="Back to list" class="btn btn-default">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </a>
+                    <a href="@Url.Action("Index", "Home")" title="Home" class="btn btn-default">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
