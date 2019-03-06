@@ -9,6 +9,6 @@ namespace Core.Interfaces
     public interface ICinemaMovieService : IBaseEntityService<CinemaMovie>
     {
         Task<List<CinemaMovie>> GetByMovieIdAsync(Guid movieId);
-        Task AsignCinemaToMovies(Guid movieId, List<KeyValuePair<Guid, bool>> cinemas);
+        Task SyncAsync(Guid movieId, List<KeyValuePair<Guid, bool>> cinemas);
     }
 }

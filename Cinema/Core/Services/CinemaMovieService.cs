@@ -27,9 +27,38 @@ namespace Core.Services
                .ToListAsync();
         }
 
-        public async Task AsignCinemaToMovies(Guid movieId, List<KeyValuePair<Guid, bool>> cinemas)
+        public async Task SyncAsync(Guid movieId, List<KeyValuePair<Guid, bool>> cinemas)
         {
-            var currentAssignments = GetByMovieIdAsync(movieId);
+            var currentCinemaMovies = await GetByMovieIdAsync(movieId);
+            var oldCinemaIds = currentCinemaMovies
+                .Select(cinemaMovie => cinemaMovie.CinemaId)
+                .ToList();
+
+            var checkedIds = cinemas
+                .Where(pair => pair.Value)
+                .Select(pair => pair.Key)
+                .ToList();
+            var toCreateIds = checkedIds
+                .Except(oldCinemaIds)
+                .ToList();
+            var cinemMovieToCreate = toCreateIds
+                .Select(id => new CinemaMovie { MovieId = movieId, CinemaId = id })
+                .ToList();
+
+            var unckeckedIds = cinemas
+                .Where(pair => !pair.Value)
+                .Select(pair => pair.Key)
+                .ToList();
+            var toDeleteIds = unckeckedIds
+                .Except(toCreateIds)
+                .Where(id => oldCinemaIds.Contains(id))
+                .ToList();
+            var cinemMovieToDelete = toDeleteIds
+                .Select(id => new CinemaMovie { MovieId = movieId, CinemaId = id })
+                .ToList();
+
+            await base.CreateAsync(cinemMovieToCreate);
+            await base.DeleteAsync(cinemMovieToDelete);
         }
     }
 }
