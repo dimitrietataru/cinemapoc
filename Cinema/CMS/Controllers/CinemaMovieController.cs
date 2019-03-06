@@ -57,9 +57,9 @@ namespace CMS.Controllers
             try
             {
                 var cinemaAssignments = mapper.Map<List<KeyValuePair<Guid, bool>>>(dto.Cinemas);
-                await cinemaMovieService.AsignCinemaToMovies(dto.Movie.Id, cinemaAssignments);
+                await cinemaMovieService.SyncAsync(dto.Movie.Id, cinemaAssignments);
 
-                return RedirectToAction("Movie", "Details", new { id = dto.Movie.Id });
+                return RedirectToAction("Details", "Movie", new { id = dto.Movie.Id });
             }
             catch
             {
