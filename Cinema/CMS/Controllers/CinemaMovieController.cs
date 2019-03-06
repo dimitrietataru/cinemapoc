@@ -51,7 +51,7 @@ namespace CMS.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, RequestSizeLimit(2_097_152)]
         public async Task<IActionResult> Assign(CinemaMovieViewModel dto)
         {
             try
